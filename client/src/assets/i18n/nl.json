@@ -1,0 +1,51 @@
+{
+    "TITLE": "Spraakopname",
+    "FILE-NAME": "File naam",
+    "FILE-NAME-ERROR": "Waarschuwing: Letters, zijfers, spaties en het symbool \"_\" zijn niet toegelaten.",
+    "GPS": {
+        "true": "GPS geactiveert",
+        "false": "GPS niet geactiveert",
+        "WAIT": "Wacht op GPS gegevens",
+        "permission": "Laat het gebruijk van GPS door de browser toe, a.u.b.",
+        "error": "Een fout is gebeurt."
+    },
+    "SELECT-ALL": "Alle selecteren",
+    "DELETE": "gemarkeerde wissen",
+    "UPLOAD-CLOUD": "Naar NextCloud uploaden",
+    "MY-FILES": "Mijn files",
+    "CLOUD": "NextCloud",
+    "NC-STATUS": {
+        "CONFIRM": "Deze files naar NextCloud uploaden?",
+        "NO-AUDIO-SELECT": "Geen files selecteert",
+        "WAIT": "Even wachten, a.u.b.",
+        "SUCCESS": "Upload succesvol!",
+        "RELOAD": "Pagina nieuw laden, a.u.b."
+    },
+    
+    "NC-ERROR": {
+        "löschMichBitteIchBinNurEinKommentar": "Rechtschreibung und Grammatik überprüfen",
+        "UNEXPECTED": "Er is een onverwachte fout opgetreden.",
+        "UPLOADFAILED": "Niet alle Audio's zijn geüpload naar NextCloud!",
+        "AUDIO": "Het audiobestand is niet goed op de server aangekomen",
+        "FILENAME": "Een audionaam bevat een illegaal symbool (/, \\)"
+    },
+    "GPS-NO-SUPPORT": "Jouw browser werkt niet met GPS.\nGebruik een andere Browser, a.u.b.\nBijvoorbeeld Firefox of Google Chrome",
+    "GPS-NO-LOCATION": "Positie kan niet bepaalt worden.\nPagina nieuw laden, a.u.b.",
+    "NO-AUDIO-PLAY": "Audio kan niet afgespeelt worden.",
+    "DELETE-ALL": "Wil jij alle files wissen?",
+    "HELP": {
+        "HELP": "Hulp",
+        "GPS": "Jij kunt GPS naar keuze activeeren of deactiveeren. Het is niet verplichtend. Als jij GPS wil gebruiken, stel zeker dat GPS activeert is en de gebruik door de browser toegestaan wordt.",
+        "RECORDING": "Om een opname te starten, druk op het blauwe knopje met het microfoon symbool. Stel zeker dat het gebruik van de microfoon door de browser toegestaan wordt.",
+        "REC-PAUSE": "Heb jij een opname gestart kun jij met het \"Pauze\"-symbool een opname pauzeeren en later dan voortzetten. Om een opname voort te zetten druk op het blauwe knopje met het microfoon symbool.",
+        "REC-STOP": "Om een lopende opname te stoppen druk op het rode knopje met het \"Stop\"-symbool. De opname wordt dan onherroepelijk verwijderd.",
+        "REC-SEND": "Wil jij een lopende opname opslaan dan druk op het knopje met het \"pijl\"-symbool."
+    },
+    "TABLE": {
+        "CHECK": "Keuze",
+        "DATE": "Datum",
+        "NAME": "Naam",
+        "POSITION": "Positie",
+        "ACTIONS": "Actie"
+    }
+}

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    networks:
+      - keycloak-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=dokutool
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    command: mysqld --lower_case_table_names=1
+    #volumes:
+      #- ./:/docker-entrypoint-initdb.d
+  keycloak:
+    image: jboss/keycloak
+    networks:
+      - keycloak-network
+    environment:
+      - DB_DATABASE=dokutool
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/tmp/example-realm.json
+      - PROXY_ADDRESS_FORWARDING=true
+    volumes:
+      - ./realm-export.json:/tmp/example-realm.json
+    depends_on:
+      - mariadb
+  # api:
+  #   build: 
+  #     context: ../api-server/
+  #   volumes: 
+  #     - ../api-server:/src
+  #     - /src/node_modules
+  #   command: npm run start:dev
+  #   environment: 
+  #     NODE_ENV: production
+  #   networks:
+  #     - keycloak-network
+  #   depends_on:
+  #     - mongo
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/:/etc/nginx/
+      - ./client:/usr/share/nginx/client
+    networks:
+      - keycloak-network
+    ports:
+      - "80:80"
+    depends_on: 
+      - keycloak
+
+networks:
+  keycloak-network:
+    name: keycloak-network

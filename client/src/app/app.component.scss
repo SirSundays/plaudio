@@ -1,0 +1,25 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.nav-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#spacer {
+  margin: 10px;
+}
+
+#sidebar {
+  background-color: whitesmoke;
+  border: none;
+  padding: 10px;
+}
+
+flag {
+  clip-path: circle(35% at 50% -10%);
+}

@@ -1,0 +1,11 @@
+# MariaDB
+/kmp/mariadb-data/
+# dependencies
+/node_modules
+/api-server/node_modules
+#vscode
+/.vscode
+#audio Files
+/api-server/audio-files
+
+/docker/client

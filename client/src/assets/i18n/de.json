@@ -1,0 +1,49 @@
+{
+    "TITLE": "Sprachrekorder",
+    "FILE-NAME": "Dateiname",
+    "FILE-NAME-ERROR": "Achtung: Buchstaben, Zahlen, leerzeichen und das Symbol _ sind erlaubt.",
+    "GPS": {
+        "true": "GPS aktiviert",
+        "false": "GPS deaktiviert",
+        "WAIT": "Warte auf GPS-Daten",
+        "permission": "Bitte erlauben sie dem Browser die Nutzung von GPS",
+        "error": "Ein Fehler ist aufgetreten"
+    },
+    "SELECT-ALL": "Alle auswählen",
+    "DELETE": "markierte Löschen",
+    "UPLOAD-CLOUD": "Nach NextCloud hochladen",
+    "MY-FILES": "Meine Dateien",
+    "CLOUD": "NextCloud",
+    "NC-STATUS": {
+        "CONFIRM": "Wollen sie wirklich die Audio-Dateien nach NextCloud hochladen?",
+        "NO-AUDIO-SELECT": "Keine Audios ausgewählt",
+        "WAIT": "Bitte warten, solange die Audios upgeloaded werden",
+        "SUCCESS": "Upload Erfolgreich!",
+        "RELOAD": "Bitte Seite neuladen und nochmal versuchen"
+    },
+    "NC-ERROR": {
+        "UNEXPECTED": "Ein Unerwarteter Fehler ist aufgetreten.",
+        "UPLOADFAILED": "Nicht alle Audios wurden nach NextCloud hochgeladen!",
+        "AUDIO": "Die Audiodatei ist fehlerhaft im Server angekommen",
+        "FILENAME": "Ein Audio Name beinhaltet ein unzulässiges Symbol (/, \\)"
+    },
+    "GPS-NO-SUPPORT": "Ihr Browser unterstützt GPS nicht.\nBitte wechseln sie ihren Webbrowser.\nPassende Webbrowser wären z.B. Firefox oder Google Chrome",
+    "GPS-NO-LOCATION": "Geolocation konnte nicht bestimmt werden. \nBitte laden sie die Seite neu und versuchen es erneut.",
+    "NO-AUDIO-PLAY": "Audio konnte nicht abgespielt werden",
+    "DELETE-ALL": "Wollen sie wirklich die Audios löschen?",
+    "HELP": {
+        "HELP": "Hilfe",
+        "GPS": "GPS kann nach Wahl aktiviert oder deaktiviert werden. Es ist nicht verpflichtend. Stellen Sie sicher, dass GPS auf ihrem Gerät aktiviert und die Nutzung für den Browser gestattet ist.",
+        "RECORDING": "Um eine Aufnahme zu starten drücken Sie auf den blauen Knopf mit dem Mikrofon Symbol. Stellen Sie sicher, dass dem Browser die Nutzung des Mikrofons gestattet ist.",
+        "REC-PAUSE": "Haben Sie eine Aufnahme gestartet können Sie über das \"Pausen\"-Symbol eine Aufnahme pausieren und zu einem späteren Zeitpunkt fortsetzen. Um eine Aufnahme fortzusetzen drücken Sie erneut auf den blauen Knopf mit dem Mikrofon Symbol.",
+        "REC-STOP": "Um eine laufende Aufnahme abzubrechen drücken Sie auf den roten Knopf mit dem \"Stopp\"-Symbol. Die Aufnahme wird dann unwiederbringlich gestoppt.",
+        "REC-SEND": "Möchten Sie eine laufende Aufnahme beenden und abspeichern, dann drücken Sie auf den Knopf mit dem Pfeil-Symbol."
+    },
+    "TABLE": {
+        "CHECK": "Auswählen",
+        "DATE": "Datum",
+        "NAME": "Name",
+        "POSITION": "Position",
+        "ACTIONS": "Aktion"
+    }
+}

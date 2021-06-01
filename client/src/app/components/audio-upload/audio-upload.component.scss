@@ -1,0 +1,42 @@
+mat-card {
+    width: 20rem;
+    height: 10rem;
+    margin-bottom: 20px;
+}
+
+mat-card-header {
+    position: relative;
+}
+
+mat-card-actions {
+    position: absolute;
+    bottom: 13px;
+}
+
+@media (max-width: 518px) {
+    .kategorienFilter {
+        margin-left: 90px;
+    }
+}
+
+@media (min-width: 519px) {
+    .kategorienFilter {
+        margin-left: 10px;
+    }
+}
+
+// Die checkbox wird größer
+.mat-checkbox-anpassen ::ng-deep .mat-checkbox-inner-container {
+    width: 22px;
+    height: 22px;
+    margin-left: 10px;
+}
+
+table {
+    width: 100%;
+}
+
+.action-row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,253 @@
+<!--
+    Folgende Module werden benötigt
+    Frontend
+    - Angular Material
+    - RecordRTC
+    - file-saver
+    - FormControl, FormGroup
+    Backend
+    - Multer
+    - require('fs'); 
+    - require('url');
+    - require('jwt-decode');
+    - require('path')
+
+    // for the Speechtotext feature
+    - require('@google-cloud/dialogflow')
+
+    Ein Controller wurde eingerichtet:
+    - im Pfad "api-server/pre-controllers/upload.controller.js" 
+    
+    Im pre-routes findet der upload statt.
+    - Im Pfad "api-server/pre-routes" zu finden
+    - der multer übernimmt die Namen vergabe und den Pfad in dem die Datei gespeichert wird.
+
+    Ein Service wurde eingerichtet:
+    - im Pfad "client/src/app/service/audio-upload" zu finden
+    
+
+    Design: 
+    von https://material.angular.io/
+
+    Liste vielleicht damit machen
+    https://material.angular.io/components/list/overview
+    https://material.angular.io/components/menu/overview
+-->
+<h2>{{ "TITLE" | translate}}</h2>
+
+<div>
+    <mat-form-field class="example-full-width">
+        <mat-label>{{ "FILE-NAME" | translate}}: </mat-label>
+        <input matInput [formControl]="username">
+        <mat-error *ngIf="username.hasError('pattern')">
+            {{ "FILE-NAME-ERROR" | translate }}
+        </mat-error>
+    </mat-form-field>
+</div>
+<br>
+<br>
+
+<div>
+    <mat-slide-toggle color="primary" (change)="watchgeolocation($event.checked)">
+        {{ "GPS." + gps_status | translate }}
+    </mat-slide-toggle>
+    <br>
+    <br>
+    <button mat-mini-fab color="primary"
+        [disabled]="(username.invalid && username.enabled) || (gps_status == 'WAIT')"
+        (click)="recordingStart()">
+        <span class="material-icons" *ngIf="recordingstarted == 'paused' || !(recordingstarted == 'recording')">
+            mic
+        </span>
+        <span class="material-icons" *ngIf="recordingstarted == 'recording'">
+            pause
+        </span>
+    </button>
+
+    <button mat-mini-fab color="warn" *ngIf="recordingstarted == 'recording' || recordingstarted == 'paused'"
+        (click)="recordingAbort()" style="margin-left: 10px;">
+        <span class="material-icons">
+            stop
+        </span>
+    </button>
+
+    <button mat-mini-fab color="primary" *ngIf="recordingstarted == 'recording' || recordingstarted == 'paused'"
+        (click)="upload_audio()" style="margin-left: 10px;">
+        <span class="material-icons">
+            send
+        </span>
+    </button>
+</div>
+<br>
+
+<!--
+<audio #stream controls>
+    
+</audio>
+-->
+
+<br>
+<mat-tab-group animationDuration="0ms">
+    <mat-tab [label]="'MY-FILES' | translate">
+        <!--
+            https://material.angular.io/components/checkbox/overview
+            Ein kleiner Design Bug bei "Alle auswählen". Nicht besonders wichtig, sollte später behoben werden.
+            Der Übergang von interminate zu checked ist nicht flüssig. 
+            Um den Fehler zu reproduzieren, müssen alle Checkboxen ausgewählt werden. 
+            Es ist dann nur nötig eine Checkbox abzuwählen und wieder auszuwählen und man sieht den mangelhalfen Übergang. 
+            Um zu sehen wie es richtig aussehen soll. Wähle eine Checkbox aus und klick auf Alle auswählen, um den flüssigen Übergang vom Strich zum Haken zu sehen
+        -->
+        <div *ngIf="allAudios" class="action-row">
+            <span>
+                <mat-checkbox color='primary' [indeterminate]="someComplete()" (change)="checkall($event.checked)"
+                    [checked]="allchecked"> {{ "SELECT-ALL" | translate}} </mat-checkbox>
+            </span>
+            <span style="margin-left: 25px;">
+                <button mat-raised-button color="warn" [disabled]="nextcloudstatus == 'WAIT'"
+                    (click)="deletemarkedfiles(allAudios)">{{ "DELETE" | translate}}</button>
+            </span>
+            <span style="margin-left: 25px;">
+                <button mat-raised-button color="primary" [disabled]="nextcloudstatus == 'WAIT' || isOffline" (click)="uploadToNextCloud()">{{
+                    "UPLOAD-CLOUD" | translate}}</button>
+            </span>
+            <span style="margin-left: 25px;" *ngIf="nextcloudstatus">
+                {{ "NC-STATUS." + nextcloudstatus | translate}}
+            </span>
+        </div>
+
+        <table mat-table [dataSource]="allAudios" matSort matTableResponsive>
+            <ng-container matColumnDef="check">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.CHECK" | translate}} </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-checkbox color='primary' [checked]="element.check" (change)="element.check = $event.checked"
+                        class="mat-checkbox-anpassen">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.DATE" | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{getDate(element.filename)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.NAME" | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.filename.split('--')[1].replace("_", " ")}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.POSITION" | translate}} </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.filename}}
+                </td>
+                <!--
+                <td mat-cell *matCellDef="let element"> <a
+                        *ngIf="!element.filename.split('--')[2].replace('-', ',').replace('.wav', '').includes('undefined')"
+                        [href]="'http://www.google.com/maps/place/' + element.filename.split('--')[2].replace('-', ',').replace('.wav', '')"
+                        target="_blank">Google Maps</a> </td>
+                -->
+            </ng-container>
+            
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.ACTIONS" | translate}} </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                    <button mat-mini-fab color="primary" (click)="playoneaudio(element.id, i)">
+                        <span class="material-icons">
+                            play_arrow
+                        </span>
+                    </button>
+                    <button mat-mini-fab (click)="downloadoneaudio(element.filename, element.id)" style="margin-left: 10px;">
+                        <span class="material-icons">
+                            download
+                        </span>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </mat-tab>
+    <mat-tab [label]="'CLOUD' | translate">
+
+        <div *ngIf="allAudiosFromNextCloud" class="action-row">
+            <span>
+                <mat-checkbox color='primary' [indeterminate]="someComplete_NextCloud()"
+                    (change)="checkall_NextCloud($event.checked)" [checked]="allcheckedForNextCloud"> {{ "SELECT-ALL" |
+                    translate}} </mat-checkbox>
+            </span>
+            <!--
+            <span style="margin-left: 25px;">
+                <button mat-raised-button color="warn" [disabled]="nextcloudstatus == 'WAIT'" (click)="deletemarkedfiles([!!!], true)">markierte Löschen</button>
+            </span>
+            -->
+        </div>
+
+        <table mat-table [dataSource]="allAudiosFromNextCloud" matSort matTableResponsive>
+            <ng-container matColumnDef="check">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.CHECK" | translate}} </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-checkbox color='primary' [checked]="element.check" (change)="element.check = $event.checked"
+                        class="mat-checkbox-anpassen">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.DATE" | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{getDate(element.filename)}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.NAME" | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.filename.split('--')[1].replace("_", " ")}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.POSITION" | translate}} </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.filename}}
+                </td>
+                <!--
+                <td mat-cell *matCellDef="let element"> <a
+                        *ngIf="!element.filename.split('--')[2].replace('-', ',').replace('.wav', '').includes('undefined')"
+                        [href]="'http://www.google.com/maps/place/' + element.filename.split('--')[2].replace('-', ',').replace('.wav', '')"
+                        target="_blank">Google Maps</a> </td>
+                -->
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> {{ "TABLE.ACTIONS" | translate}} </th>
+                <td mat-cell *matCellDef="let element; let i = index;"><button mat-mini-fab color="primary"
+                        (click)="playAudioFromNextCloud(element.filename, i)">
+                        <span class="material-icons">
+                            play_arrow
+                        </span>
+                    </button>
+
+                    <button mat-mini-fab (click)="downloadAudioFromNextCloud(element.filename, true)"
+                        style="margin-left: 10px;">
+                        <span class="material-icons">
+                            download
+                        </span>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </mat-tab>
+    <mat-tab [label]="'HELP.HELP' | translate">
+        <ul>
+            <li>{{ "HELP.GPS" | translate}}</li>
+            <li>{{ "HELP.RECORDING" | translate}}
+                <ul>
+                    <li>{{ "HELP.REC-PAUSE" | translate}}</li>
+                    <li>{{ "HELP.REC-STOP" | translate}}</li>
+                    <li>{{ "HELP.REC-SEND" | translate}}</li>
+                </ul>
+            </li>
+        </ul>
+    </mat-tab>
+</mat-tab-group>
