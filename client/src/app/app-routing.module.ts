@@ -1,28 +1,27 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './app.authguard';
+
+import { AuthGuard } from './auth.guard';
 
 //Audio Upload
 import { AudioUploadComponent } from './components/audio-upload/audio-upload.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/audioupload',
-    pathMatch: 'full'
+    component: AudioUploadComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'audioupload',
-    component: AudioUploadComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['visitor'] }
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: '**',
-    redirectTo: '/audioupload',
+    redirectTo: '/',
     pathMatch: 'full'
-  },
-  
+  }
 ];
 
 @NgModule({

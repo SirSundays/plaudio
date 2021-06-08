@@ -17,7 +17,7 @@
     "NC-STATUS": {
         "CONFIRM": "Wollen sie wirklich die Audio-Dateien nach NextCloud hochladen?",
         "NO-AUDIO-SELECT": "Keine Audios ausgewählt",
-        "WAIT": "Bitte warten, solange die Audios upgeloaded werden",
+        "WAIT": "Bitte warten, solange die Audios hochgeladen werden",
         "SUCCESS": "Upload Erfolgreich!",
         "RELOAD": "Bitte Seite neuladen und nochmal versuchen"
     },
@@ -44,6 +44,7 @@
         "DATE": "Datum",
         "NAME": "Name",
         "POSITION": "Position",
+        "NOPOSITION": "Keine Positionsdaten",
         "ACTIONS": "Aktion"
     }
 }

@@ -9,224 +9,6 @@ const nextcloudClient = require("nextcloud-node-client")
 const dialogflow = require('@google-cloud/dialogflow');
 
 const UploadController = {
-    async uploadAudio(req, res){
-        try{            
-            var filename = "";
-            
-            if(req.body.fullname){
-                filename = req.body.fullname;
-            }
-
-            // User ID rausbekommen
-            let userId = jwt_decode(req.kauth.grant.access_token.token).sub;
-            let dir = "./audio-files/"
-            
-            // überprüfen ob Ordner ./audio-files/ existiert
-            fs.exists(dir, exist => {
-                if (!exist) {
-                    // wenn nicht soll der Ordner erstellt werden
-                    fs.mkdir(dir, error => console.log("Error: " + error))
-                }
-                dir = "./audio-files/" + userId + "/"
-
-                // überprüfen ob Ordner "./audio-files/" + userId + "/" existiert
-                fs.exists(dir, exist => {
-                    if (!exist) {
-                        // wenn nicht soll der Ordner erstellt werden
-                        fs.mkdir(dir, error => console.log("Error: " + error))
-                    }
-                    // die Datei soll erstellt werden
-                    var callback = fs.writeFileSync(dir + filename, req.files.blob[0].buffer)
-
-                    // überprüft ob der die Datei erstellt wurde
-                    fs.exists(dir + filename, exist => {
-                        if(exist){
-                            // wenn ja sende ok
-                            res.statusCode = 200
-                            res.send(["Datei " + filename + " erstellt!"])
-                        }else{
-                            // wenn nicht sende Error
-                            res.statusCode = 500
-                            res.send(["Error: Datei " + filename + " konnte nicht erstellt werden!\n" + callback])
-                        }
-                    });
-
-                });
-            });
-            
-        }catch(e){
-            console.log(e.name + ": " + e.message);
-        }
-    },
-    async listallaudiosfromuser(req, res){
-        try{
-            let userId = jwt_decode(req.kauth.grant.access_token.token).sub;
-
-            const audionamearray = url.format({ pathname: req.originalUrl }).split('/');
-            const url_folder = decodeURI(audionamearray[audionamearray.length -1]) //decodeURI wandelt %C3%9C in ü um
-            var folder = '././audio-files/' + userId
-
-            if(url_folder == "list_archiv"){
-                folder = folder + "/archiv";
-            }
-            
-            // existiert Verzeichniss?
-            fs.exists(folder, function (exist) {
-                if(!exist) {
-                    //nein! leeres Array senden
-                    res.statusCode = 200;
-                    res.send([]);
-                    return
-                }
-                //ja! den Inhalt auslesen
-                fs.readdir(folder, { withFileTypes: true }, (err, folder_and_files) => {
-                    if(err){
-                        res.statusCode = 500;
-                        res.end(`Error beim versuch die Dateien zu bekommen: ${err}.`);
-                        return
-                    }else{
-                        const files = folder_and_files
-                            .filter(file => file.isFile())
-                            .map(file => file.name);
-
-                        var arrayresult = [];
-
-                        for(let file of files){
-                            let objresult = {}
-                            var filesplit = file.split(".")
-                            // filesplit[0] => File Name
-                            // filesplit[filesplit.length -1] => mimetyp z.b. json oder wav
-                            
-                            // überpüft ob es eine JSON Datei ist
-                            if(filesplit[filesplit.length -1] == "json"){
-                                //wenn ja dann soll es übersprungen werden
-                                continue
-                            }else{
-                                //überprüft ob es eine JSON Datei mit dem gleichen Namen gibt
-                                let jsonexist = fs.existsSync(folder + "/" + filesplit[0] + ".json")
-                                if(jsonexist){
-                                    //Wenn ja, dann werden die Daten aus JSON rausgehollt und in objresult gespeichert
-                                    let rawdata = fs.readFileSync(folder + "/" + filesplit[0] + ".json");
-                                    let data = JSON.parse(rawdata);
-                                    objresult = {filename: file, speechtotext: data["speechtotext"]};
-                                }else{
-                                    objresult = {filename: file};
-                                }
-                                arrayresult.push(objresult)
-                            }
-                        }
-
-                        res.statusCode = 200
-                        res.send(arrayresult)
-                    }
-                });
-            });
-            
-        }catch(e){
-            console.log(e.name + ": " + e.message);
-            res.statusCode = 500;
-            res.end(`Error beim versuch die Dateien zu bekommen: ${err}.`);
-        }
-    },
-    async getoneaudio(req, res){
-        try{
-            // Informationen für den Path werden gesammelt und verarbeitet.
-            const userId = jwt_decode(req.kauth.grant.access_token.token).sub;
-            const audionamearray = url.format({ pathname: req.originalUrl }).split('/');
-            const audioname = decodeURI(audionamearray[audionamearray.length -1]) //decodeURI wandelt %C3%9C in ü um
-            const url_folder = decodeURI(audionamearray[audionamearray.length -2]) //decodeURI wandelt %C3%9C in ü um
-            
-            // Path wird erstellt
-            var filepath;
-            if(url_folder != "getaudiofromarchive"){
-                filepath = userId + "/" + audioname;
-            }else{
-                filepath = userId + "/archiv/" + audioname;
-            }
-
-            // existiert Verzeichniss?
-            fs.exists('././audio-files/' + filepath, function (exist) {
-                if(!exist) {
-                    // Error wenn Datei nicht existiert
-                    res.statusCode = 404;
-                    res.end("Datei nicht gefunden!: " + audioname );
-                    return;
-                }
-                // Fullpath wird für sendFile benötigt
-                const fullpath = path.resolve('audio-files/' + filepath);
-                
-                // Datei wird gesendet
-                res.type('audio/wav');
-                res.sendFile(fullpath);
-            });
-        }catch(e){
-            console.log(e.name + ": " + e.message);
-            res.statusCode = 500;
-            res.end(`Error beim versuch die Datei zu bekommen: ${err}.`);
-        }
-    },
-    async deletefile(req, res){
-        try{
-            // Informationen aus der URL werden gesammelt und verarbeitet.
-            const userId = jwt_decode(req.kauth.grant.access_token.token).sub;
-            const url_filenamearray = url.format({ pathname: req.originalUrl }).split('/');
-            const filename = decodeURI(url_filenamearray[url_filenamearray.length -1]) //decodeURI wandelt %C3%9C in ü um
-            const folder = decodeURI(url_filenamearray[url_filenamearray.length -2]) //decodeURI wandelt %C3%9C in ü um
-
-            // überprüft ob die Namen zulässig sind, falls / oder \, dann error
-            if(filename.indexOf('/') != -1 || filename.indexOf('\\') != -1){  
-                res.statusCode = 400;
-                res.end(`Error: Ein Audio Name beinhaltet ein unzulässiges Symbol (/, \\)`);
-                return
-            }
-
-            var filepath
-            if(folder == "deletefromarchive"){
-                // Path wird zum Archiv erstellt
-                filepath = '././audio-files/' + userId + '/archiv/' + filename;
-            }else{
-                // Path wird erstellt
-                filepath = '././audio-files/' + userId + '/' + filename;
-            }
-
-            // existiert Datei?
-            fs.exists(filepath, (exist) => {
-                if(!exist){
-                    // Error wenn Datei nicht existiert
-                    let filenamearray = filename.split('.')
-                    let mimetyp = filenamearray[filenamearray.length -1]
-
-                    // prüft welche Art von Datei es sich handelt
-                    if(mimetyp == "json"){
-                        // kein Error wenn JSON Datei nicht existiert  
-                        res.statusCode = 200;
-                        res.send(["Die JSON Datei gibt es nicht"]);
-                    }else{
-                        // Error wenn Audio Datei nicht existiert
-                        res.statusCode = 404;
-                        res.end("Die Datei gibt es nicht");
-                    }
-                }else{
-                    // Datei wird gelöscht
-                    fs.unlink(filepath, (err) => {
-                        if(err){
-                            console.log("unlink failed", err);
-                            res.statusCode = 500;
-                            res.end("etwas ging beim löschen von " + filename + " schief.");
-                        }else{
-                            res.statusCode = 200;
-                            res.send(["Datei wurde gelöscht"]);
-                        }
-                    });
-                }
-            });
-        }catch(e){
-            console.log(e.name + ": " + e.message);
-            res.statusCode = 500;
-            res.end(`Error beim versuch die Dateien zu bekommen: ${err}.`);
-        }
-    },
-
     //NextCloud Funktionen
     async uploadToNextCloud(req, res){
         try{
@@ -260,7 +42,7 @@ const UploadController = {
             
             /// create folder and collect all necessery Information 
             // take User Givenname und Birthname
-            var name = jwt_decode(req.kauth.grant.access_token.token).name
+            var name = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             if(name == undefined || name == ""){
                 name = "no_Name"
             }else{
@@ -335,7 +117,7 @@ const UploadController = {
     },
     async listOfNextCloudFolder(req, res){
         try{
-            var name = jwt_decode(req.kauth.grant.access_token.token).name
+            var name = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             if(name == undefined || name == ""){
                 name = "no_Name"
             }else{
@@ -368,7 +150,7 @@ const UploadController = {
     },
     async getOneAudioFromNextCloud(req, res){
         try{
-            var username = jwt_decode(req.kauth.grant.access_token.token).name
+            var username = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             if(username == undefined || username == ""){
                 username = "no_Name"
             }else{
@@ -396,7 +178,7 @@ const UploadController = {
     async speechtotext(req, res){
         try{
             // Informationen für den Path werden gesammelt und verarbeitet.
-            const userId = jwt_decode(req.kauth.grant.access_token.token).sub;
+            const userId = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             const audionamearray = url.format({ pathname: req.originalUrl }).split('/');
             const audioname = decodeURI(audionamearray[audionamearray.length -1])//decodeURI wandelt %C3%9C in ü um
             // Path wird erstellt
@@ -471,7 +253,7 @@ const UploadController = {
     async upload_json(req, res){
         try{
             // Informationen für den Path werden gesammelt und verarbeitet.
-            const userId = jwt_decode(req.kauth.grant.access_token.token).sub;
+            const userId = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             const audioname = decodeURI(req.body.jsonname)//decodeURI wandelt %C3%9C in ü um
 
             // Name der JSON Datei erstellen

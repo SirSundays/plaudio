@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { KeycloakService } from 'keycloak-angular';
 import { environment } from '../environments/environment';
 
 import { IndexedDBService } from './services/indexedDB/indexed-db.service';
+import { AuthService } from './services/authservice/auth-service.service';
 
 @Component({
   selector: 'app-root',
@@ -16,20 +16,17 @@ export class AppComponent {
   // Lädt die User Profil URL aus der environment-Datei
   userProfileURL = environment.userProfileURL;
 
-  constructor(private keycloakService: KeycloakService, public translate: TranslateService, private db: IndexedDBService) {
+  constructor(public translate: TranslateService, private db: IndexedDBService, private authService: AuthService) {
     translate.setDefaultLang('de');
     translate.use(localStorage.getItem('PLONK_lang'));
-  }
-
-  // Keycloak Logout Funktion
-  async doLogout() {
-    localStorage.removeItem("token");
-    await this.db.deleteDB()
-    await this.keycloakService.logout();
   }
 
   lang(lang) {
     localStorage.setItem('PLONK_lang', lang);
     this.translate.use(lang);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

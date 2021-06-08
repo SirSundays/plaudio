@@ -46,6 +46,7 @@
         "DATE": "Datum",
         "NAME": "Naam",
         "POSITION": "Positie",
+        "NOPOSITION": "Geen Positie",
         "ACTIONS": "Actie"
     }
 }

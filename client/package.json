@@ -32,16 +32,18 @@
     "@angular/platform-browser-dynamic": "~10.1.6",
     "@angular/router": "~10.1.6",
     "@angular/service-worker": "~10.1.6",
+    "@auth0/angular-jwt": "^5.0.2",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "dexie": "^3.0.3",
     "file-saver": "^2.0.5",
+    "jsrsasign": "^10.3.0",
+    "jsrsasign-util": "^1.0.5",
     "jwt-decode": "^3.1.2",
-    "keycloak-angular": "^8.0.1",
-    "keycloak-js": "^11.0.2",
     "moment": "^2.29.1",
     "ngx-flags": "^1.0.2",
-    "recordrtc": "^5.6.1"
+    "recordrtc": "^5.6.1",
+    "rxjs": "^7.1.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1001.7",

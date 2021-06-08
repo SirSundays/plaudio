@@ -8,11 +8,9 @@ import { OfflineFunctionsService } from '../../services/offline-functions/offlin
 import * as RecordRTC from 'recordrtc';
 import { saveAs } from 'file-saver';
 
-import { KeycloakService } from 'keycloak-angular';
-import { KeycloakProfile } from 'keycloak-js';
 import { TranslateService } from '@ngx-translate/core';
 
-import jwtdecode from 'jwt-decode'
+import { AuthService } from 'src/app/services/authservice/auth-service.service';
 
 
 @Component({
@@ -23,16 +21,15 @@ import jwtdecode from 'jwt-decode'
 export class AudioUploadComponent implements OnInit {
 
   constructor(
-    private AudioUpload: AudioUploadService, 
-    private readonly keycloak: KeycloakService, 
+    private AudioUpload: AudioUploadService,
     public translate: TranslateService,
     protected readonly offlineFunctions: OfflineFunctionsService,
-    protected readonly IndexedDB: IndexedDBService
-    
-  ) {  }
+    protected readonly IndexedDB: IndexedDBService,
+    private authService: AuthService
+  ) { }
 
   async ngOnInit() {
-    
+
     // check if the funktion 'navigator.geolocation' exist
     if (!navigator.geolocation) {
       this.translationAlert("GPS-NO-SUPPORT");
@@ -42,57 +39,37 @@ export class AudioUploadComponent implements OnInit {
     this.IndexedDB.initDB()
 
     //setInterval(async ()=>{
-      await this.offlineFunctions.isOnline().subscribe(async (isOnline)=>{
+    await this.offlineFunctions.isOnline().subscribe(async (isOnline) => {
 
-        if(isOnline){
-          this.isOffline = false
-          this.isLoggedIn = await this.keycloak.isLoggedIn();
-          if (this.isLoggedIn) {
-            this.userProfile = await this.keycloak.loadUserProfile();
-            
-            if (this.userProfile.firstName != "" && this.userProfile.lastName != "") {
-              this.username.setValue(this.userProfile.firstName + " " + this.userProfile.lastName)
-            } else {
-              this.username.setValue(this.userProfile.username)
-            }
-          }
+      if (isOnline) {
+        this.isOffline = false
 
-          this.listallAudiosFromNextCloudfromuser()
-        }else{
-          console.log("offline")
-          
-          this.isOffline = true
-          
-          var token = localStorage.getItem('token')
-          
-          if(token != null && token != undefined && token != "" && typeof token == "string"){
-            var decoded_token = jwtdecode(token)
-            if ((decoded_token["given_name"] != "" && decoded_token["given_name"] != undefined ) && (decoded_token["family_name"] != "" && decoded_token["family_name"] != undefined)) {
-              this.username.setValue(decoded_token['given_name'] + " " + decoded_token["family_name"])
-            }
-          }
+        this.username.setValue(this.authService.getUserData().sub);
 
-        }
+        this.listallAudiosFromNextCloudfromuser();
+      } else {
+        this.isOffline = true;
+        this.username.setValue(this.authService.getUserData().sub);
 
-        
-      })
+      }
+
+
+    })
     //}, 3000);
 
-    var x = document.cookie; 
-    console.log("cookie")
-    console.log(x)
+    var x = document.cookie;
 
-    this.listAllAudiosFromIndexedDB()
+    this.listAllAudiosFromIndexedDB();
 
   }
 
   async ngOnDestroy() {
-    this.recordingAbort()
+    this.recordingAbort();
   }
 
   // take the Username from Keycloak
   public isLoggedIn = false;
-  public userProfile: KeycloakProfile | null = null;
+  public userProfile = null;
 
   // check if the Input is valid
   username = new FormControl('', Validators.pattern('[a-zA-Z1-90 _]*'))
@@ -135,19 +112,19 @@ export class AudioUploadComponent implements OnInit {
   isOffline: boolean = false;
 
   // Table
-  displayedColumns = ["check","date","name","position","actions"];
+  displayedColumns = ["check", "date", "name", "position", "actions"];
 
   // Table - Get Date
   getDate = function (filename) {
     let dateStr = filename.split('--')[0];
-    let day = dateStr.substr(8,2);
-    var months = [ "January", "February", "March", "April", "May", "June", 
-           "July", "August", "September", "October", "November", "December" ];
-    let month = months[dateStr.substr(5,2).replace(/^0+/, '') - 1];
-    let year = dateStr.substr(0,4);
-    let hour = dateStr.substr(11,2);
-    let minute = dateStr.substr(12,2);
-    let seconds = dateStr.substr(14,2);
+    let day = dateStr.substr(8, 2);
+    var months = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    let month = months[dateStr.substr(5, 2).replace(/^0+/, '') - 1];
+    let year = dateStr.substr(0, 4);
+    let hour = dateStr.substr(11, 2);
+    let minute = dateStr.substr(12, 2);
+    let seconds = dateStr.substr(14, 2);
     let zone = dateStr.substr(17);
     let date = new Date(`${year} ${month} ${day} ${hour}:${minute}:${seconds} ${zone}`);
     return date.toUTCString();
@@ -270,7 +247,7 @@ export class AudioUploadComponent implements OnInit {
         name = name.split(" ").join("_")
       }
 
-      if(this.gps_status != "true" && this.gps_status != "false"){
+      if (this.gps_status != "true" && this.gps_status != "false") {
         this.recordingAbort()
         return
       }
@@ -302,8 +279,8 @@ export class AudioUploadComponent implements OnInit {
         // save Filename
         if (name && name !== "") {
           filename = filename + "--" + name
-        }else{
-          filename = filename + "--" + "undefinded" 
+        } else {
+          filename = filename + "--" + "undefinded"
         }
 
         if (this.location.geolocation.latitude && this.location.geolocation.longitude) {
@@ -311,7 +288,7 @@ export class AudioUploadComponent implements OnInit {
         }
 
         filename = filename + "." + this.recorder_einstellungen.mimeType.split("/")[1]
-        audio_req["filename"] = filename 
+        audio_req["filename"] = filename
 
         // get Audio from RekorderRTC
         this.public_audioblob = this.public_recorder.getBlob();
@@ -330,13 +307,13 @@ export class AudioUploadComponent implements OnInit {
         if (this.gps_status == "true") {
           if (this.location.geolocation.latitude && this.location.geolocation.longitude) {
             this.IndexedDB.put(audio_req);
-            this.listAllAudiosFromIndexedDB() 
-          }else{
+            this.listAllAudiosFromIndexedDB()
+          } else {
             this.translationAlert("GPS-NO-LOCATION");
           }
-        }else if(this.gps_status == "false"){
+        } else if (this.gps_status == "false") {
           this.IndexedDB.put(audio_req);
-          this.listAllAudiosFromIndexedDB() 
+          this.listAllAudiosFromIndexedDB()
         }
 
       });
@@ -362,8 +339,8 @@ export class AudioUploadComponent implements OnInit {
     }
   }
 
-  listAllAudiosFromIndexedDB(){
-    this.IndexedDB.getAll().then((data)=>{
+  listAllAudiosFromIndexedDB() {
+    this.IndexedDB.getAll().then((data) => {
       this.allAudios = data
       for (let index in this.allAudios) {
         this.allAudios[index].check = false
@@ -383,12 +360,12 @@ export class AudioUploadComponent implements OnInit {
 
   // Functions for the Table
   playoneaudio(audioid, id) {
-    this.IndexedDB.getAudio(audioid).then((blob)=>{
+    this.IndexedDB.getAudio(audioid).then((blob) => {
       this.playAudio(blob, id)
     })
   }
   downloadoneaudio(audioname, audioid) {
-    this.IndexedDB.getAudio(audioid).then((blob)=>{
+    this.IndexedDB.getAudio(audioid).then((blob) => {
       saveAs(blob, audioname)
       this.listAllAudiosFromIndexedDB()
     });
@@ -396,7 +373,7 @@ export class AudioUploadComponent implements OnInit {
   async deletemarkedfiles(audios) {
     if (await this.translationConfirm("DELETE-ALL")) {
       for (let audio of audios.filter(audio => audio.check)) {
-        this.IndexedDB.delete(audio.filename).then(()=>{
+        this.IndexedDB.delete(audio.filename).then(() => {
           this.listAllAudiosFromIndexedDB()
         })
       }
@@ -541,29 +518,29 @@ export class AudioUploadComponent implements OnInit {
           this.nextcloudstatus = "SUCCESS";
 
           // If not all audios uploaded successfully, don't delete everything
-          if(data['error'] != undefined){
-            this.translationAlert("NC-ERROR."+ data['error']);
-            for(let audio of checked_audios){  
+          if (data['error'] != undefined) {
+            this.translationAlert("NC-ERROR." + data['error']);
+            for (let audio of checked_audios) {
               // dont delete it            
-              if(data['failedFiles'].indexOf(audio.filename) !== -1){
+              if (data['failedFiles'].indexOf(audio.filename) !== -1) {
                 continue
               }
               // delete it
-              this.IndexedDB.delete(audio.filename).then(()=>{
+              this.IndexedDB.delete(audio.filename).then(() => {
                 this.listAllAudiosFromIndexedDB()
               });
             }
 
-          }else{
-            for(let audio of checked_audios){
-              this.IndexedDB.delete(audio.filename).then(()=>{
+          } else {
+            for (let audio of checked_audios) {
+              this.IndexedDB.delete(audio.filename).then(() => {
                 this.listAllAudiosFromIndexedDB()
               });
             }
           }
         },
         (error) => {
-          this.translationAlert("NC-ERROR."+ error.error);
+          this.translationAlert("NC-ERROR." + error.error);
           this.listAllAudiosFromIndexedDB();
           this.listallAudiosFromNextCloudfromuser();
           this.nextcloudstatus = "RELOAD";
@@ -573,7 +550,7 @@ export class AudioUploadComponent implements OnInit {
     } else {
       return;
     }
-    
+
   }
   playAudioFromNextCloud(audioname, id) {
     this.AudioUpload.getOneAudioFromNextCloud(audioname).subscribe(blob => {
@@ -638,5 +615,4 @@ export class AudioUploadComponent implements OnInit {
       );
     });
   }
-
 }
