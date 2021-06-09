@@ -13,7 +13,7 @@ services:
       M_PROD: 'true'
       NEXTCLOUD_USERNAME: dmitrij
       NEXTCLOUD_PASSWORD: nextcloud
-      NEXTCLOUD_URL: https://cloud.jan-sonntag.com
+      NEXTCLOUD_URL: https://cloud.example.com
     networks:
       - plaudio-network
   nginx:

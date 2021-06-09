@@ -1,71 +1,55 @@
 # README #
 
-Set up Project
+### What is Plaudio? ###
+Plaudio is a little PWA which is developed for the project [[https://www.deutschland-nederland.eu/project/gartners-gruner-daumen-2/|Gardeners Green Thumb]]. It should help gardeners document their work and make the data reachable for the scientist in the project.
 
-### How do I get set up? ###
+With Plaudio the gardeners can use their phones to record audio locally and then upload it later to a provided Nextcloud.
 
-* ### Schritt 1: Docker-Desktop installieren ###
+### How do I get set up for production? ###
+
+* ### Step 1: Docker-Desktop installieren ###
     
-    Download Docker-Desktop: https://www.docker.com/products/docker-desktop
+    Download and install Docker(-Desktop): https://www.docker.com/products/docker-desktop
 
-    Folge den Schritten um Docker Desktop (Hyper-V) zu installieren
+* ### Step 2: Generate Private and Public Keys ###
 
-    Starte Docker Desktop
-
-    Öffne ein Terminmal, wechsel in das Verzeichnis ./docker der App und führen den Befehl docker-compose up aus
-
-    Auf eventuelle Nachfrage von Windows drücke auf "Share It"
-
-    Keyclock ist nun unter localhost:8080 erreichbar, phpMyAdmin unter:8081, eine MySQL Datenbank läuft auf Port 3306 und eine MongoDB auf 27017
-
-* ### Schritt 2: Node-Module installieren ###
-
-    Führe npm install im Root Verzeichnis, als auch in ./client aus
-
-* ### Schritt 3: MongoDB Compass installieren ### 
-
-    Download MongoDB Compass: https://www.mongodb.com/try/download/compass
-
-    Folge den Schritten um MongoDB Compass zu installieren
-
-    Öffne MongoDB Compass und Klicken auf Fill in connection fields individually:
-
-    Hostname: localhost
-    Port: 27017
-    Authentication: Username/Password (admin/admin)
-
-* ### Schritt 4: User in Keycloak anlegen ###
-
-    Unter localhost:8080 links auf Admin Console klicken und dort mit admin admin anmelden
-
-    Im Reiter links auf Useres klicken und dann rechts oben auf add User
-
-    In disesem Screen einen Usernamen vergeben und die Email auf verified setzen, anschließend save drücken
-
-    Danach unter dem Reiter Credentials ein Passwort vergeben und speichern
+    For this you can use a website like this: https://travistidwell.com/jsencrypt/demo/
     
-    Weiterhin muss dem User noch eine sogenannte Rolle gegeben werden. Klicke dazu auf den Reiter "Role Mappings".
-    Zum testen sollte dem User am besten die Rolle "Configurator" zu geteilt werden. 
-    Diese beinhaltet alle Rechte der dadrunter liegenden. Dazu die gewünschte Rolle auswählen und auf "Add selected" drücken. 
+* ### Step 3: Using the keys ###
 
-    Mit diesem Useraccount kann sich anschließend in der App angemeldet werden. 
+    Copy the private key into a file called "private.key" inside of the "docker" folder.
 
-    eventuell muss die neue realm Datei unter ./docker in Keycloak importiert werden
+    Copy the public key into a file called "public.key" inside of the "docker" folder. Also paste it into the "pubKey"-variable inside the "environment.prod.ts" which is inside the "client/src/environments" folder.
 
-* ### Schritt 5: Modelle in das Backend laden ###
+* ### Step 4: Update the server url ###
 
-    Unter ./scripts befindet sich ein Script mit dem Namen create.js, mit diesem können dynamisch Backendmodelle und Routen aus xml Dateien erstellt werden
+    In the aformentioned "environment.prod.ts", fill in the url of the server which can be reached by the frontend (something like "http://localhost" or "https://example.com").
 
-    Die dazugehörigen xml Dateien müssen unter ./scripts/objects bzw. ./scripts/massnahmen abgelget werden (Für Struktur siehe Beispieldateien)
+* ### Step 5: Build the client ###
 
-    Das Script kann mit node create.js <objects/massnahmen> <objectName/Massnahmenname>.xml aufgerufen werden (Aufgrund eines Bugs können aktuell nicht mehrere Dateien hintereinander angelegt werden)
+    Execute "ng build --prod" inside the client folder.
 
-* ### Schritt 6: Backend starten ###
+* ### Step 6: Update docker-compose ###
 
-    Das Backend kann unter ./api-server über node app.js gestartet werden und läuft danach auf Port 5000
-    
-* ### Schritt 7: Client tests ###
+    Fill in the nextcloud related user and server information.
 
-    Das Frontend unter ./client basiert auf Angular und ist mit AngularMaterial designed 
+* ### Step 7: Run docker-compose ###
 
-    Mit ng-serve kann das Frontend im Development-Modus unter localhost:4200 bearbeitet werden
+    Execute "docker-compose up --build" inside the "docker" folder. You should be up and running now.
+    There are two test users. One of which is the user "test" with the password "test".
+
+### How to add new users? ###
+
+Coming Soon.
+
+### How do I get set up for development? ###
+
+Coming Soon.
+
+### Contributers ###
+
+Coming Soon.
+
+### Disclaimer ###
+
+This project may include some private RSA keys or passwords that where used for development. These are just for testing and will not be used in production.
