@@ -1,7 +1,7 @@
 # README #
 
 ### What is Plaudio? ###
-Plaudio is a little PWA which is developed for the project [[https://www.deutschland-nederland.eu/project/gartners-gruner-daumen-2/|Gardeners Green Thumb]]. It should help gardeners document their work and make the data reachable for the scientist in the project.
+Plaudio is a little PWA which is developed for the project [Gardeners Green Thumb](https://www.deutschland-nederland.eu/project/gartners-gruner-daumen-2/). It should help gardeners document their work and make the data reachable for the scientist in the project.
 
 With Plaudio the gardeners can use their phones to record audio locally and then upload it later to a provided Nextcloud.
 
