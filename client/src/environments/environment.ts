@@ -1,21 +1,15 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
-  production: false,
-  userProfileURL: 'http://localhost/auth/realms/dokutool/account/',
-  keycloakURL: 'http://localhost/auth',
-  keycloakRealm: 'Dokutool',
-  keycloakClient: 'dokutool-frontend',
-  apiServer: 'http://localhost:5000',
+  production: true,
+  apiServer: "http://localhost:5000",
+  pubKey: `
+  -----BEGIN PUBLIC KEY-----
+  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3fO6RlgQWI6UulbWs4h1
+  fO61yUJnaRKW1yBJIm51l7l/wmmQjzcCoc/GXnnBSpEWXBbK4yqYXRh748D6iyBc
+  SPvsN8Ks5mJbxnepAmckFNbKHAcob8pXAEgXcMoKYqIjl4Mwu9Y57NtQmEuyiVmD
+  O5W+IwiDoagzewWabEPITJl/DKD2EmvEDurbTqGkNmrVy8bEiYjA33TZ8uBbRIW6
+  H9Qt6oo1vPsuF+75vNQcsjCnfdTld7X3K8S0EkXhFNvleU2ZsFJX0mncX7Z2QfgK
+  SKk3r7Sr09OG6BI84G66wnmnuvSYmEVn51qXeG9dc7pjws1pUShY+930nA0/Ktkp
+  +wIDAQAB
+  -----END PUBLIC KEY-----
+  `
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

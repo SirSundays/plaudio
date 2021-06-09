@@ -1,18 +1,15 @@
-FROM node:14-alpine as base
+FROM node:12-alpine
+ENV NODE_ENV=production
 
 WORKDIR /src
-COPY package*.json ./
-EXPOSE 5000
 
-FROM base as production
-ENV NODE_ENV=production
-RUN npm ci
-COPY . .
-CMD ["node", "app.js"]
+COPY ["package.json", "package-lock.json*", "./"]
 
-FROM base as dev
-ENV NODE_ENV=development
-RUN npm i
-RUN npm install -g nodemon
+RUN apk add --no-cache make gcc g++ python && \
+  npm install && \
+  npm rebuild bcrypt --build-from-source && \
+  apk del make gcc g++ python
+
 COPY . .
-CMD ["nodemon", "app.js"]
+
+CMD [ "node", "app.js" ]

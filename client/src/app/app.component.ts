@@ -13,8 +13,6 @@ import { AuthService } from './services/authservice/auth-service.service';
 export class AppComponent {
   opened: false;
   title = 'client';
-  // Lädt die User Profil URL aus der environment-Datei
-  userProfileURL = environment.userProfileURL;
 
   constructor(public translate: TranslateService, private db: IndexedDBService, private authService: AuthService) {
     translate.setDefaultLang('de');

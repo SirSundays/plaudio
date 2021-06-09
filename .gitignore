@@ -9,3 +9,5 @@
 /api-server/audio-files
 
 /docker/client
+
+/docker/*.key

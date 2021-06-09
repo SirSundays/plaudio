@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.form = this.fb.group({
-      email: ['', Validators.required],
+      username: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -21,8 +21,8 @@ export class LoginComponent implements OnInit {
   login() {
     const val = this.form.value;
 
-    if (val.email && val.password) {
-      this.authService.login(val.email, val.password)
+    if (val.username && val.password) {
+      this.authService.login(val.username, val.password)
         .subscribe(
           (res) => {
             this.authService.setSession(res);
