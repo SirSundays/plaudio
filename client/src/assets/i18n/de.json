@@ -46,5 +46,7 @@
         "POSITION": "Position",
         "NOPOSITION": "Keine Positionsdaten",
         "ACTIONS": "Aktion"
-    }
+    },
+    "USERNAME": "Nutzername",
+    "PASSWORD": "Passwort"
 }

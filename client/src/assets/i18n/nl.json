@@ -48,5 +48,7 @@
         "POSITION": "Positie",
         "NOPOSITION": "Geen Positie",
         "ACTIONS": "Actie"
-    }
+    },
+    "USERNAME": "Gebruikersnaam",
+    "PASSWORD": "Wachtwoord"
 }
