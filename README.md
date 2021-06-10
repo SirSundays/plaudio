@@ -7,7 +7,7 @@ With Plaudio the gardeners can use their phones to record audio locally and then
 
 ### How do I get set up for production? ###
 
-* ### Step 1: Docker-Desktop installieren ###
+* ### Step 1: Docker-Desktop ###
     
     Download and install Docker(-Desktop): https://www.docker.com/products/docker-desktop
 
@@ -38,17 +38,45 @@ With Plaudio the gardeners can use their phones to record audio locally and then
     Execute "docker-compose up --build" inside the "docker" folder. You should be up and running now.
     There are two test users. One of which is the user "test" with the password "test".
 
-### How to add new users? ###
+### How to manage users? ###
 
-Coming Soon.
+* ### Step 1: Shell ###
+
+    Open a shell inside the docker folder.
+
+* ### Step 2: Go into the container ###
+
+    Execute "docker-compose exec api /bin/bash".
+    You now have a bash shell inside of the container.
+
+* ### Step 3: Manage users ###
+
+    Execute "node registerUsers.js".
+    Follow the steps on the screen.
+
+* ### Step 4: Exit the Shell ###
+
+    Execute "exit".
 
 ### How do I get set up for development? ###
 
-Coming Soon.
+    Coming soon.
 
 ### Contributers ###
 
-Coming Soon.
+[Dmitrij Poberej](https://github.com/Dmitrij-P)
+* Base features
+* Audio Recording
+* Audio Management
+* Connection to NextCloud
+* Offline Function
+
+[Jan Sonntag](https://github.com/SirSundays)
+* User Authentication
+* User Management
+* Client offline Verification
+* UI improvements
+* Translations
 
 ### Disclaimer ###
 
