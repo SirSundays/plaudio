@@ -11,3 +11,6 @@
 /docker/client
 
 /docker/*.key
+/api-server/*.key
+
+/api-server/.env

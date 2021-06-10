@@ -113,6 +113,7 @@ export class AudioUploadComponent implements OnInit {
 
   // Table
   displayedColumns = ["check", "date", "name", "position", "actions"];
+  displayedColumnsCloud = ["date", "name", "position", "actions"];
 
   // Table - Get Date
   getDate = function (filename) {
@@ -614,5 +615,11 @@ export class AudioUploadComponent implements OnInit {
       }
       );
     });
+  }
+  nxtcPos(element) {
+    if (element.filename.split('--').length > 2) {
+      return element.filename.split('--')[2].replace('-', ',').replace('.wav', '');
+    }
+    return -1;
   }
 }

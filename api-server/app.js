@@ -4,6 +4,9 @@ const cors = require('cors');
 
 const Routes = require("./routes");
 
+if (!process.env.NEXTCLOUD_URL.includes('http')) {
+    require('dotenv').config();
+}
 
 // Port der API festlegen
 const port = 5000;
