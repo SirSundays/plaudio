@@ -50,5 +50,6 @@
         "ACTIONS": "Actie"
     },
     "USERNAME": "Gebruikersnaam",
-    "PASSWORD": "Wachtwoord"
+    "PASSWORD": "Wachtwoord",
+    "UNAUTHORIZED": "Verkeerde gebruikersnaam of verkeerd wachtwoord", "deleteME":"Es wurde mit Google übersetzt"
 }

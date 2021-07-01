@@ -48,5 +48,6 @@
         "ACTIONS": "Aktion"
     },
     "USERNAME": "Nutzername",
-    "PASSWORD": "Passwort"
+    "PASSWORD": "Passwort",
+    "UNAUTHORIZED": "Falscher Benutzername oder falsches Passwort"
 }
