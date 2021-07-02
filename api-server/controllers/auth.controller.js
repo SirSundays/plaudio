@@ -53,9 +53,10 @@ const validateEmailAndPassword = function (username, password) {
         bcrypt.compare(password, userWname[0].password, (err, result) => {
             if (err) {
                 console.log("bcrypt err: ", err);
-                resolve(false);
+                reject(false);
+            } else {
+                resolve(result);
             }
-            resolve(true);
         });
     });
 }
