@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   public isLoggedIn() {
-    if (!this.helper.isTokenExpired(this.getToken()) && this.verifyToken()) {
+    if (!this.helper.isTokenExpired(this.getToken())) {
       return true;
     }
     return false;
@@ -54,8 +54,8 @@ export class AuthService {
   }
 
   verifyToken() {
-    let jwt = this.getToken();
-    return KJUR.jws.JWS.verifyJWT(jwt, this.pubkey, {alg: ['RS256']});
+    let token = this.getToken();
+    return KJUR.jws.JWS.verifyJWT(token, this.pubkey, {alg: ['RS256']});
   }
 
   getToken() {
