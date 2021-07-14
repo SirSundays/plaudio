@@ -38,26 +38,16 @@ export class AudioUploadComponent implements OnInit {
     // init indexedDB
     this.IndexedDB.initDB()
 
-    //setInterval(async ()=>{
-    await this.offlineFunctions.isOnline().subscribe(async (isOnline) => {
+    let isOnline = await this.offlineFunctions.isOnline()
 
-      if (isOnline) {
-        this.isOffline = false
-
-        this.username.setValue(this.authService.getUserData().sub);
-
-        this.listallAudiosFromNextCloudfromuser();
-      } else {
-        this.isOffline = true;
-        this.username.setValue(this.authService.getUserData().sub);
-
-      }
-
-
-    })
-    //}, 3000);
-
-    var x = document.cookie;
+    if (isOnline) {
+      this.isOffline = false
+      this.username.setValue(this.authService.getUserData().sub);
+      this.listallAudiosFromNextCloudfromuser();
+    } else {
+      this.isOffline = true;
+      this.username.setValue(this.authService.getUserData().sub);
+    }
 
     this.listAllAudiosFromIndexedDB();
 
@@ -72,7 +62,7 @@ export class AudioUploadComponent implements OnInit {
   public userProfile = null;
 
   // check if the Input is valid
-  username = new FormControl('', Validators.pattern('[a-zA-Z1-90 _]*'))
+  username = new FormControl('', Validators.pattern('[a-zA-Z1-90 _]*'));
 
   // for RecorderRTC
   public_recorder: any;
