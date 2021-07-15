@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 
-import { IndexedDBService } from './services/indexedDB/indexed-db.service';
 import { AuthService } from './services/authservice/auth-service.service';
 
 @Component({
@@ -14,7 +13,7 @@ export class AppComponent {
   opened: false;
   title = 'client';
 
-  constructor(public translate: TranslateService, private db: IndexedDBService, private authService: AuthService) {
+  constructor(public translate: TranslateService, private authService: AuthService) {
     translate.setDefaultLang('de');
     translate.use(localStorage.getItem('PLONK_lang'));
   }

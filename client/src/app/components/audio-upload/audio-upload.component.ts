@@ -8,7 +8,7 @@ import { OfflineFunctionsService } from '../../services/offline-functions/offlin
 import * as RecordRTC from 'recordrtc';
 import { saveAs } from 'file-saver';
 
-import { TranslateService } from '@ngx-translate/core';
+import { TranslaterService } from '../../services/translater/translater.service';
 
 import { AuthService } from 'src/app/services/authservice/auth-service.service';
 
@@ -22,7 +22,7 @@ export class AudioUploadComponent implements OnInit {
 
   constructor(
     private AudioUpload: AudioUploadService,
-    public translate: TranslateService,
+    private translater: TranslaterService,
     protected readonly offlineFunctions: OfflineFunctionsService,
     protected readonly IndexedDB: IndexedDBService,
     private authService: AuthService
@@ -32,7 +32,7 @@ export class AudioUploadComponent implements OnInit {
 
     // check if the funktion 'navigator.geolocation' exist
     if (!navigator.geolocation) {
-      this.translationAlert("GPS-NO-SUPPORT");
+      this.translater.translationAlert("GPS-NO-SUPPORT")
     }
 
     // init indexedDB
@@ -152,7 +152,7 @@ export class AudioUploadComponent implements OnInit {
     } catch (e) {
       console.log("Audio-Error: ")
       console.log(e.name + ": " + e.message);
-      this.translationAlert("NO-AUDIO-PLAY");
+      this.translater.translationAlert("NO-AUDIO-PLAY")
     }
   }
 
@@ -300,7 +300,7 @@ export class AudioUploadComponent implements OnInit {
             this.IndexedDB.put(audio_req);
             this.listAllAudiosFromIndexedDB()
           } else {
-            this.translationAlert("GPS-NO-LOCATION");
+            this.translater.translationAlert("GPS-NO-LOCATION")
           }
         } else if (this.gps_status == "false") {
           this.IndexedDB.put(audio_req);
@@ -362,7 +362,7 @@ export class AudioUploadComponent implements OnInit {
     });
   }
   async deletemarkedfiles(audios) {
-    if (await this.translationConfirm("DELETE-ALL")) {
+    if (await this.translater.translationConfirm("DELETE-ALL")) {
       for (let audio of audios.filter(audio => audio.check)) {
         this.IndexedDB.delete(audio.filename).then(() => {
           this.listAllAudiosFromIndexedDB()
@@ -435,7 +435,7 @@ export class AudioUploadComponent implements OnInit {
   async watchgeolocation(checked: boolean) {
     // checks if the Browser supports 'navigator.geolocation'
     if (!navigator.geolocation) {
-      this.translationAlert("GPS-NO-LOCATION");
+      this.translater.translationAlert("GPS-NO-LOCATION")
       return
     }
 
@@ -493,7 +493,8 @@ export class AudioUploadComponent implements OnInit {
       this.nextcloudstatus = "NO-AUDIO-SELECT"
       return
     }
-    if (await this.translationConfirm("NC-STATUS.CONFIRM")) {
+    
+    if (await this.translater.translationConfirm("NC-STATUS.CONFIRM")) {
       this.nextcloudstatus = "WAIT"
       let audio_request = new FormData();
 
@@ -510,7 +511,7 @@ export class AudioUploadComponent implements OnInit {
 
           // If not all audios uploaded successfully, don't delete everything
           if (data['error'] != undefined) {
-            this.translationAlert("NC-ERROR." + data['error']);
+            this.translater.translationAlert("NC-ERROR." + data['error'])
             for (let audio of checked_audios) {
               // dont delete it            
               if (data['failedFiles'].indexOf(audio.filename) !== -1) {
@@ -531,7 +532,7 @@ export class AudioUploadComponent implements OnInit {
           }
         },
         (error) => {
-          this.translationAlert("NC-ERROR." + error.error);
+          this.translater.translationAlert("NC-ERROR." + error.error);
           this.listAllAudiosFromIndexedDB();
           this.listallAudiosFromNextCloudfromuser();
           this.nextcloudstatus = "RELOAD";
@@ -571,41 +572,7 @@ export class AudioUploadComponent implements OnInit {
     this.AudioUpload.upload_json(request).subscribe(data => {
     });
   }
-
-  translationConfirm(key) {
-    return new Promise((resolve, reject) => {
-      let trans = "";
-      this.translate.get(key).subscribe({
-        next: (res: string) => {
-          trans = res;
-        },
-        error: (err) => {
-          reject(err);
-        },
-        complete: () => {
-          resolve(confirm(trans));
-        }
-      }
-      );
-    });
-  }
-  translationAlert(key) {
-    return new Promise((resolve, reject) => {
-      let trans = "";
-      this.translate.get(key).subscribe({
-        next: (res: string) => {
-          trans = res;
-        },
-        error: (err) => {
-          reject(err);
-        },
-        complete: () => {
-          resolve(alert(trans));
-        }
-      }
-      );
-    });
-  }
+  
   nxtcPos(element) {
     if (element.filename.split('--').length > 2) {
       return element.filename.split('--')[2].replace('-', ',').replace('.wav', '');

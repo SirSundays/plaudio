@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/authservice/auth-service.service';
+import { TranslaterService } from '../../services/translater/translater.service';
 
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -17,13 +17,13 @@ export class LoginComponent implements OnInit {
       private fb: FormBuilder, 
       private authService: AuthService, 
       private router: Router,
-      public translate: TranslateService
+      private translater: TranslaterService
     ){
       this.form = this.fb.group({
         username: ['', Validators.required],
         password: ['', Validators.required]
-    });
-  }
+      });
+    } 
 
   login() {
     const val = this.form.value;
@@ -38,9 +38,9 @@ export class LoginComponent implements OnInit {
           (error)=>{
             if(error.status == 401){
               console.log("Unauthorized")
-              this.translationAlert("UNAUTHORIZED");
+              this.translater.translationAlert("UNAUTHORIZED")
             }else{
-              this.translationAlert("NC-ERROR.UNEXPECTED");
+              this.translater.translationAlert("NC-ERROR.UNEXPECTED")
               // kann später weg, dient nur um zu debugen
               alert("unerwarteter Fehler: " + error.error + "\nError Message: "+ error.message)
               console.log(error)
@@ -48,24 +48,6 @@ export class LoginComponent implements OnInit {
           }
         );
     }
-  }
-
-  translationAlert(key) {
-    return new Promise((resolve, reject) => {
-      let trans = "";
-      this.translate.get(key).subscribe({
-        next: (res: string) => {
-          trans = res;
-        },
-        error: (err) => {
-          reject(err);
-        },
-        complete: () => {
-          resolve(alert(trans));
-        }
-      }
-      );
-    })
   }
 
   ngOnInit(): void {
