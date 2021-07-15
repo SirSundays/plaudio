@@ -20,6 +20,7 @@ module.exports = function (app, keycloak) {
 
 	// Auth
 	router.post('/login', authController.login);
+	router.get('/verify', authController.verifyToken)
 	
 	app.use('/api/pre', router);
 };

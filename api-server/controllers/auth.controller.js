@@ -32,6 +32,21 @@ const authController = {
         }
     },
 
+    async verifyToken(req, res){
+        try{
+            let token = req.headers.authorization.replace("Bearer ","");
+            jwt.verify(token, RSA_PUBLIC_KEY, (err, dec) => {
+                if (dec != undefined) {
+                    res.status(200).send(true)
+                } else {
+                    res.status(200).send(false);
+                }
+            });
+        }catch(e){
+            res.status(500).send(false);
+        }
+    },
+
     checkIfAuthenticated(req, res, next) {
         let token = req.headers.authorization.replace("Bearer ","");
         jwt.verify(token, RSA_PUBLIC_KEY, (err, dec) => {

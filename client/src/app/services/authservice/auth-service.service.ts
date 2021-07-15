@@ -53,7 +53,23 @@ export class AuthService {
     return this.helper.decodeToken(this.getToken());
   }
 
-  verifyToken() {
+  async verifyToken(){
+    let token = this.getToken();
+    
+    return new Promise((resolve, reject)=>{
+      this.http.get(this.api + '/verify').subscribe(
+        (res)=>{
+          resolve(res)
+        },
+        (error)=>{
+          reject()
+        }
+      )
+    })
+    
+  }
+
+  verifyToken2() { /// is bugged. return false when it goes to fast
     let token = this.getToken();
     return KJUR.jws.JWS.verifyJWT(token, this.pubkey, {alg: ['RS256']});
   }
