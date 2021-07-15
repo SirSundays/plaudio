@@ -49,5 +49,8 @@
     },
     "USERNAME": "Nutzername",
     "PASSWORD": "Passwort",
-    "UNAUTHORIZED": "Falscher Benutzername oder falsches Passwort"
+    "AUTH": {
+        "UNAUTHORIZED": "Falscher Benutzername oder falsches Passwort",
+        "VERIFY-UNAUTHORIZED": "Sie werden abgemeldet, weil ihr Anmelde Token ungültig ist!"
+    }
 }

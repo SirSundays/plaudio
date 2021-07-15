@@ -5,7 +5,7 @@ import { AuthService } from './services/authservice/auth-service.service';
 
 import { OfflineFunctionsService } from './services/offline-functions/offline-functions.service';
 
-import { TranslateService } from '@ngx-translate/core';
+import { TranslaterService } from './services/translater/translater.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -13,23 +13,22 @@ export class AuthGuard implements CanActivate {
         private router: Router,
         private authService: AuthService,
         protected readonly offlineFunctions: OfflineFunctionsService,
-        public translate: TranslateService
+        public translater: TranslaterService
     ) { }
 
     async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         
         let isOnline = await this.offlineFunctions.isOnline()
-        
         if(isOnline){
             let verify = await this.authService.verifyToken()
             if(!verify){
+                this.translater.translationAlert("VERIFY-UNAUTHORIZED")
                 this.authService.logout()
+                return false
             }
-            return true
         }else{
             console.log("offline")
         }
-        
         
         const currentUser = this.authService.isLoggedIn();
         if (currentUser) {

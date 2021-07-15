@@ -38,12 +38,9 @@ export class LoginComponent implements OnInit {
           (error)=>{
             if(error.status == 401){
               console.log("Unauthorized")
-              this.translater.translationAlert("UNAUTHORIZED")
+              this.translater.translationAlert("AUTH."+"UNAUTHORIZED")
             }else{
               this.translater.translationAlert("NC-ERROR.UNEXPECTED")
-              // kann später weg, dient nur um zu debugen
-              alert("unerwarteter Fehler: " + error.error + "\nError Message: "+ error.message)
-              console.log(error)
             }
           }
         );

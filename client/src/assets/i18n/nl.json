@@ -21,7 +21,6 @@
         "SUCCESS": "Upload succesvol!",
         "RELOAD": "Pagina nieuw laden, a.u.b."
     },
-    
     "NC-ERROR": {
         "löschMichBitteIchBinNurEinKommentar": "Rechtschreibung und Grammatik überprüfen",
         "UNEXPECTED": "Er is een onverwachte fout opgetreden.",
@@ -51,5 +50,8 @@
     },
     "USERNAME": "Gebruikersnaam",
     "PASSWORD": "Wachtwoord",
-    "UNAUTHORIZED": "Verkeerde gebruikersnaam of verkeerd wachtwoord", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt"
+    "AUTH": {
+        "UNAUTHORIZED": "Verkeerde gebruikersnaam of verkeerd wachtwoord", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt",
+        "VERIFY-UNAUTHORIZED": "U bent uitgelogd omdat uw login token ongeldig is!", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt"
+    }
 }
