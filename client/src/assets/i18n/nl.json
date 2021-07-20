@@ -53,5 +53,6 @@
     "AUTH": {
         "UNAUTHORIZED": "Verkeerde gebruikersnaam of verkeerd wachtwoord", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt",
         "VERIFY-UNAUTHORIZED": "U bent uitgelogd omdat uw login token ongeldig is!", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt"
-    }
+    },
+    "REDIRECT-TO-NC-FOLDER": "Omleiden naar de map NextCloud", "löschMichBitteIchBinNurEinKommentar3":"Es wurde mit Google übersetzt"
 }

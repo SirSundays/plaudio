@@ -38,14 +38,18 @@ export class AudioUploadComponent implements OnInit {
     // init indexedDB
     this.IndexedDB.initDB()
 
-    let isOnline = await this.offlineFunctions.isOnline()
-
-    if (isOnline) {
+    this.isOffline = !window.navigator.onLine
+    window.onoffline = (event) => {
+      this.isOffline = true
+    };
+    window.ononline = (event) => {
       this.isOffline = false
+    };
+
+    if (!this.isOffline) {
       this.username.setValue(this.authService.getUserData().sub);
       this.listallAudiosFromNextCloudfromuser();
     } else {
-      this.isOffline = true;
       this.username.setValue(this.authService.getUserData().sub);
     }
 
@@ -553,6 +557,15 @@ export class AudioUploadComponent implements OnInit {
     this.AudioUpload.getOneAudioFromNextCloud(audioname).subscribe(blob => {
       saveAs(blob, audioname)
     });
+  }
+  redirectToNextCloudFolder(){
+    
+    this.AudioUpload.getUrlfromNextCloudFolder().subscribe(
+      (res)=>{
+        console.log(res)
+      }
+    )
+
   }
 
   // Experimental functions

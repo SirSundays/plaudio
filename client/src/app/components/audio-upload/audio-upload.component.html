@@ -131,7 +131,15 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </mat-tab>
+
     <mat-tab [label]="'CLOUD' | translate">
+        <div *ngIf="allAudios" class="action-row">
+            <span style="margin-left: 25px;">
+                <button mat-raised-button color="primary" [disabled]="isOffline"
+                    (click)="redirectToNextCloudFolder()">{{"REDIRECT-TO-NC-FOLDER" | translate}}</button><!-- später einen link bauen -->
+            </span>
+            
+        </div>
 
         <table mat-table [dataSource]="allAudiosFromNextCloud" matSort matTableResponsive>
 

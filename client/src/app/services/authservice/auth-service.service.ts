@@ -55,18 +55,20 @@ export class AuthService {
 
   async verifyToken(){
     let token = this.getToken();
-    
+    if(token == undefined || token == null || token == ""){
+      return false
+    }
+
     return new Promise((resolve, reject)=>{
       this.http.get(this.api + '/verify').subscribe(
         (res)=>{
           resolve(res)
         },
         (error)=>{
-          reject()
+          reject(error.status)
         }
       )
     })
-    
   }
 
   verifyToken2() { /// is bugged. return false when it goes to fast
