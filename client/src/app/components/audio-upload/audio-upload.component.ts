@@ -224,7 +224,7 @@ export class AudioUploadComponent implements OnInit {
       console.log(e.name + ": " + e.message);
     }
   }
-  async upload_audio() {
+  upload_audio() {
     try {
       var filename
       var name;
@@ -563,6 +563,9 @@ export class AudioUploadComponent implements OnInit {
     this.AudioUpload.getUrlfromNextCloudFolder().subscribe(
       (res)=>{
         console.log(res)
+      },
+      (error)=>{
+        console.log(error)
       }
     )
 

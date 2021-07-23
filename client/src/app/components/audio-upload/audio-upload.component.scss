@@ -25,7 +25,7 @@ mat-card-actions {
     }
 }
 
-// Die checkbox wird größer
+// makes the checkboxes bigger
 .mat-checkbox-anpassen ::ng-deep .mat-checkbox-inner-container {
     width: 22px;
     height: 22px;
@@ -39,4 +39,8 @@ table {
 .action-row {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.no-interaction {
+    pointer-events: none;
 }

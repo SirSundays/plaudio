@@ -13,7 +13,8 @@ module.exports = function (app, keycloak) {
 	router.post('/nextcloud/hochladen', authController.checkIfAuthenticated, getblob.fields([{ name: 'blobToNextCloud'}]), UploadController.uploadToNextCloud);
 	router.get('/nextcloud/getfolder', authController.checkIfAuthenticated, UploadController.listOfNextCloudFolder);
 	router.get('/nextcloud/file/:audioname', authController.checkIfAuthenticated, UploadController.getOneAudioFromNextCloud);
-	
+	router.get('/nextcloud/url', authController.checkIfAuthenticated, UploadController.getNextCloudUrl);
+
 	// Experimental functions
 	router.get('/audio/speechtotext/:audioname', authController.checkIfAuthenticated, UploadController.speechtotext);
 	router.post('/json/hochladen', authController.checkIfAuthenticated, UploadController.upload_json);

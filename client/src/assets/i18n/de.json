@@ -37,7 +37,21 @@
         "RECORDING": "Um eine Aufnahme zu starten drücken Sie auf den blauen Knopf mit dem Mikrofon Symbol. Stellen Sie sicher, dass dem Browser die Nutzung des Mikrofons gestattet ist.",
         "REC-PAUSE": "Haben Sie eine Aufnahme gestartet können Sie über das \"Pausen\"-Symbol eine Aufnahme pausieren und zu einem späteren Zeitpunkt fortsetzen. Um eine Aufnahme fortzusetzen drücken Sie erneut auf den blauen Knopf mit dem Mikrofon Symbol.",
         "REC-STOP": "Um eine laufende Aufnahme abzubrechen drücken Sie auf den roten Knopf mit dem \"Stopp\"-Symbol. Die Aufnahme wird dann unwiederbringlich gestoppt.",
-        "REC-SEND": "Möchten Sie eine laufende Aufnahme beenden und abspeichern, dann drücken Sie auf den Knopf mit dem Pfeil-Symbol."
+        "REC-SEND": "Möchten Sie eine laufende Aufnahme beenden und abspeichern, dann drücken Sie auf den Knopf mit dem Pfeil-Symbol.",
+        "filename": "Im Feld \"Dateiname\" können sie die Datei selbst benennen. Standardmäßig wird ihr Benutzername verwendet. Ihre Änderungen am Dateinamen werden nicht gespeichert, sobald die Seite neugeladen wird, wird der Dateiname wieder zum Benutzernamen zurückgesetzt.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
+        "MY-FILES": {
+            "MY-FILES": "Unter \"Meine Dateien\" finden sie ihre erstellten Audios, die noch nicht nach NextCloud hochgeladen wurden. Diese Audios sind auf ihrem Gerät gespeichert, wenn sie sich auf einem anderen Gerät anmelden, werden die Audios nicht auf dem anderen Gerät übertragen.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
+            "FIRST-COLUMN": "In der ersten Spalte können Audios ausgewählt werden, um diese zu löschen oder nach NextCloud zu senden", 
+            "SECOND-COLUMN": "In der zweiten Spalte wird das Datum angezeigt.", 
+            "THIRD-COLUMN": "In der dritten Spalte wird der Dateiname angezeigt.", 
+            "FOURTH-COLUMN": "In der vierten Spalte kann entweder die GPS Daten durch Google Maps angezeigt werden oder es ist ein leeres Feld, weil die GPS Daten für das Audio nicht gesammelt wurden.", 
+            "FIFTH-COLUMN1": "In der fünften Spalte kann das Audio abgespielt", 
+            "FIFTH-COLUMN2": "oder gedownloaded werden." 
+        },
+        "NEXTCLOUD": {
+            "NEXTCLOUD": "Unter \"NextCloud\" finden sie alle ihre hochgeladenen Audios. Die Audios werden in dem gleichen Tabelle Format aufgelistet, wie in \"Meine Dateien\". Damit die Audios in NextCloud nicht ausversehen gelöscht werden, wird keine löschen Funktion angeboten. Falls sie eine oder mehrere Datein löschen wollen, können sie sich gerne an das \"Dev Team?\" melden ",
+            "REDIRECT-TO-NEXTCLOUD": "Wenn sie ihren Ordner in NextCloud besuchen wollen, dann können sie auf \"Zum NextCloud Ordner umleiten\" drücken. Dort werden sie ihre hochgeladenen Audios und Transkripte finden."
+        }
     },
     "TABLE": {
         "CHECK": "Auswählen",

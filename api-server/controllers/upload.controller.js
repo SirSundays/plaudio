@@ -160,7 +160,7 @@ const UploadController = {
             const audionamearray = url.format({ pathname: req.originalUrl }).split('/');
             const audioname = decodeURI(audionamearray[audionamearray.length -1]) //decodeURI wandelt %C3%9C in ü um
 
-            /* Client Credentials ist in .env zu finden */
+            /* Client Credentials ist in docker-compose.yml zu finden */
             const client = new nextcloudClient.Client();
             /* Datei aus den Ordner raushollen */
             const file = await client.getFile("/Audio_Dateien_von_den_Gaertnern/" + username + "/" + audioname);
@@ -169,8 +169,31 @@ const UploadController = {
             res.status(200).send(buffer)
         }catch(e){
             console.log(e);
+            res.statusCode = 500;        
+        }
+    },
+    async getNextCloudUrl(req, res){
+        try{
+            var username = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
+            if(username == undefined || username == ""){
+                username = "no_Name"
+            }else{
+                username = username.split(" ").join("_")
+            }
+
+            const client = new nextcloudClient.Client();
+            const folder = await client.getFolder("/Audio_Dateien_von_den_Gaertnern/");
+            const content = folder.getContent()
+            console.log("username")
+            console.log(username)
+            console.log("content")
+            console.log(content)
+            const share = await client.updateShare(folder)
+            
+            res.send(content)
+        }catch(e){
+            console.log(e);
             res.statusCode = 500;
-            res.end(`Error beim versuch die Datei aus dem NextCloud zu bekommen: \n` + e.name + ": " + e.message);
         }
     },
     
