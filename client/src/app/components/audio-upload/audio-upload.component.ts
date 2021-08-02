@@ -11,6 +11,7 @@ import { saveAs } from 'file-saver';
 import { TranslaterService } from '../../services/translater/translater.service';
 
 import { AuthService } from 'src/app/services/authservice/auth-service.service';
+import { ThrowStmt } from '@angular/compiler';
 
 
 @Component({
@@ -55,11 +56,21 @@ export class AudioUploadComponent implements OnInit {
 
     this.listAllAudiosFromIndexedDB();
 
+    let allAudios = await this.IndexedDB.getAll()
+    for(let e of allAudios) {
+      let blob = await this.IndexedDB.getAudio(e.id)
+      let bloburl = URL.createObjectURL(blob);
+      console.log(bloburl)
+      this.test[e.id] = bloburl
+    }
+
   }
 
   async ngOnDestroy() {
     this.recordingAbort();
   }
+
+  test: any = {}
 
   // take the Username from Keycloak
   public isLoggedIn = false;
@@ -88,7 +99,7 @@ export class AudioUploadComponent implements OnInit {
   gps_status: string = "false"
 
   // for the Audio Player
-  @ViewChild('stream') playerRef: ElementRef<HTMLAudioElement>;
+  @ViewChild('audioOption') audioPlayerRef: ElementRef;
   public_audioblob: any;
   playaudio = {}
 
@@ -111,24 +122,33 @@ export class AudioUploadComponent implements OnInit {
 
   // Table - Get Date
   getDate = function (filename) {
+    
     let dateStr = filename.split('--')[0];
-    let day = dateStr.substr(8, 2);
-    var months = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"];
-    let month = months[dateStr.substr(5, 2).replace(/^0+/, '') - 1];
-    let year = dateStr.substr(0, 4);
+
+    let YearMonthDay = dateStr.substr(0, 10);
     let hour = dateStr.substr(11, 2);
     let minute = dateStr.substr(12, 2);
     let seconds = dateStr.substr(14, 2);
     let zone = dateStr.substr(17);
-    let date = new Date(`${year} ${month} ${day} ${hour}:${minute}:${seconds} ${zone}`);
-    return date.toUTCString();
+    
+    let date = `${YearMonthDay} ${hour}:${minute}:${seconds} ${zone}`
+    
+    return date
+  }
+
+  async playAudio2(audioid){
+    try{
+      const blob = await this.IndexedDB.getAudio(audioid)
+      const bloburl = URL.createObjectURL(blob);
+      return bloburl
+    }catch(e){
+      console.log(e)
+    }
   }
 
   // play Audio from a Blob 
   playAudio(blob, id) {
     try {
-
 
       //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
       //https://stackoverflow.com/questions/54814092/angular-viewchild-audio-element-as-htmlaudioelement

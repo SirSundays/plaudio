@@ -44,11 +44,10 @@
 </div>
 <br>
 
-<!--
-<audio #stream controls>
-    
+
+<audio #audioOption controls preload="metadata">
+    <source src='../../../assets/test.wav' type="audio/wav">
 </audio>
--->
 
 <br>
 <mat-tab-group animationDuration="0ms">
@@ -66,15 +65,21 @@
                 <mat-checkbox color='primary' [indeterminate]="someComplete()" (change)="checkall($event.checked)"
                     [checked]="allchecked"> {{ "SELECT-ALL" | translate}} </mat-checkbox>
             </span>
-            <span style="margin-left: 25px;">
-                <button mat-raised-button color="warn" [disabled]="nextcloudstatus == 'WAIT'"
-                    (click)="deletemarkedfiles(allAudios)">{{ "DELETE" | translate}}</button>
-            </span>
-            <span style="margin-left: 25px;">
-                <button mat-raised-button color="primary" [disabled]="nextcloudstatus == 'WAIT' || isOffline"
-                    (click)="uploadToNextCloud()">{{
-                    "UPLOAD-CLOUD" | translate}}</button>
-            </span>
+            <div>
+                <span style="margin-left: 25px;">
+                    <button mat-raised-button color="warn" [disabled]="nextcloudstatus == 'WAIT'"
+                        (click)="deletemarkedfiles(allAudios)">
+                        {{ "DELETE" | translate}}
+                    </button>
+                </span>
+                <span style="margin-left: 25px;">
+                    <button mat-raised-button color="primary" [disabled]="nextcloudstatus == 'WAIT' || isOffline"
+                        (click)="uploadToNextCloud()">
+                        {{"UPLOAD-CLOUD" | translate}}
+                    </button>
+                </span>
+            </div>
+            
             <span style="margin-left: 25px;" *ngIf="nextcloudstatus">
                 {{ "NC-STATUS." + nextcloudstatus | translate}}
             </span>
@@ -118,6 +123,11 @@
                             play_arrow
                         </span>
                     </button>
+
+                    <audio #audioOption controls preload="metadata">
+                        <source [src]='test[element.id]' type="audio/wav">
+                    </audio>
+
                     <button mat-mini-fab (click)="downloadoneaudio(element.filename, element.id)"
                         style="margin-left: 10px;">
                         <span class="material-icons">
@@ -171,7 +181,6 @@
                             play_arrow
                         </span>
                     </button>
-
                     <button mat-mini-fab (click)="downloadAudioFromNextCloud(element.filename, true)"
                         style="margin-left: 10px;">
                         <span class="material-icons">
