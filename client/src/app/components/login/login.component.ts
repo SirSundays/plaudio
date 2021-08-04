@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 import { AuthService } from '../../services/authservice/auth-service.service';
 import { TranslaterService } from '../../services/translater/translater.service';
 
@@ -12,7 +13,7 @@ import { TranslaterService } from '../../services/translater/translater.service'
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
-
+  observer: any;
   constructor(
       private fb: FormBuilder, 
       private authService: AuthService, 
@@ -29,7 +30,8 @@ export class LoginComponent implements OnInit {
     const val = this.form.value;
 
     if (val.username && val.password) {
-      this.authService.login(val.username, val.password)
+      this.observer = this.authService.login(val.username, val.password)
+        .pipe(take(1))
         .subscribe(
           (res) => {
             this.authService.setSession(res);
@@ -48,6 +50,11 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+  async ngOnDestroy() {
+    try{
+      this.observer.unsubscribe()
+    }catch(e){}
   }
 
 }

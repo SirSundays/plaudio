@@ -43,13 +43,10 @@
     </button>
 </div>
 <br>
-<br>
 
-<audio #audioOption controls preload="metadata" *ngIf="allAudios != undefined">
-    <source #src src="" type="audio/wav">
+<audio #audioOption controls preload="metadata">
+    <source #src type="audio/wav">
 </audio>
-
-
 
 <br>
 <mat-tab-group animationDuration="0ms">

@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators';
 
+import { AuthService } from 'src/app/services/authservice/auth-service.service';
 import { AudioUploadService } from '../../services/audio-upload/audio-upload.service';
 import { IndexedDBService } from '../../services/indexedDB/indexed-db.service';
 import { OfflineFunctionsService } from '../../services/offline-functions/offline-functions.service';
+import { TranslaterService } from '../../services/translater/translater.service';
 
 import * as RecordRTC from 'recordrtc';
 import { saveAs } from 'file-saver';
-
-import { TranslaterService } from '../../services/translater/translater.service';
-
-import { AuthService } from 'src/app/services/authservice/auth-service.service';
-import { ThrowStmt } from '@angular/compiler';
 
 
 @Component({
@@ -61,7 +59,15 @@ export class AudioUploadComponent implements OnInit {
 
   async ngOnDestroy() {
     this.recordingAbort();
+
+    // unsubscribe all Observers 
+    this.observers.forEach(observer => {
+      observer.unsubscribe()
+    });
   }
+
+  // for avoiding Memory Leaks unsubscribe all Observers 
+  observers: any = []
 
   // false=> Online; true=> Offline
   isOffline: boolean = false;
@@ -347,13 +353,15 @@ export class AudioUploadComponent implements OnInit {
     })
   }
   listallAudiosFromNextCloudfromuser() {
-    this.AudioUpload.listOfNextCloudFolder().subscribe(data => {
-      this.allAudiosFromNextCloud = data;
-      for (let index in this.allAudiosFromNextCloud) {
-        this.allAudiosFromNextCloud[index].check = false;
-      }
-      this.allchecked = false;
-    })
+    this.observers.push(
+      this.AudioUpload.listOfNextCloudFolder().pipe(take(1)).subscribe(data => {
+        this.allAudiosFromNextCloud = data;
+        for (let index in this.allAudiosFromNextCloud) {
+          this.allAudiosFromNextCloud[index].check = false;
+        }
+        this.allchecked = false;
+      })
+    )
   }
 
   /// Basic Table Functions
@@ -434,41 +442,43 @@ export class AudioUploadComponent implements OnInit {
         audio_request.append("blobToNextCloud", blob, audio.filename)
       }
 
-      this.AudioUpload.nextcloudupload(audio_request).subscribe(
-        (data) => {
-          this.listAllAudiosFromIndexedDB();
-          this.listallAudiosFromNextCloudfromuser();
-          this.nextcloudstatus = "SUCCESS";
+      this.observers.push(
+        this.AudioUpload.nextcloudupload(audio_request).pipe(take(1)).subscribe(
+          (data) => {
+            this.listAllAudiosFromIndexedDB();
+            this.listallAudiosFromNextCloudfromuser();
+            this.nextcloudstatus = "SUCCESS";
 
-          // If not all audios uploaded successfully, don't delete everything
-          if (data['error'] != undefined) {
-            this.translater.translationAlert("NC-ERROR." + data['error'])
-            for (let audio of checked_audios) {
-              // dont delete it            
-              if (data['failedFiles'].indexOf(audio.filename) !== -1) {
-                continue
+            // If not all audios uploaded successfully, don't delete everything
+            if (data['error'] != undefined) {
+              this.translater.translationAlert("NC-ERROR." + data['error'])
+              for (let audio of checked_audios) {
+                // dont delete it            
+                if (data['failedFiles'].indexOf(audio.filename) !== -1) {
+                  continue
+                }
+                // delete it
+                this.IndexedDB.delete(audio.filename).then(() => {
+                  this.listAllAudiosFromIndexedDB()
+                });
               }
-              // delete it
-              this.IndexedDB.delete(audio.filename).then(() => {
-                this.listAllAudiosFromIndexedDB()
-              });
-            }
 
-          } else {
-            for (let audio of checked_audios) {
-              this.IndexedDB.delete(audio.filename).then(() => {
-                this.listAllAudiosFromIndexedDB()
-              });
+            } else {
+              for (let audio of checked_audios) {
+                this.IndexedDB.delete(audio.filename).then(() => {
+                  this.listAllAudiosFromIndexedDB()
+                });
+              }
             }
+          },
+          (error) => {
+            this.translater.translationAlert("NC-ERROR." + error.error);
+            this.listAllAudiosFromIndexedDB();
+            this.listallAudiosFromNextCloudfromuser();
+            this.nextcloudstatus = "RELOAD";
           }
-        },
-        (error) => {
-          this.translater.translationAlert("NC-ERROR." + error.error);
-          this.listAllAudiosFromIndexedDB();
-          this.listallAudiosFromNextCloudfromuser();
-          this.nextcloudstatus = "RELOAD";
-        }
-      );
+        )
+      )
 
     } else {
       return;
@@ -538,34 +548,41 @@ export class AudioUploadComponent implements OnInit {
 
   // Functions for the "NextCloud" Table
   playAudioFromNextCloud(audioname) {
-    this.AudioUpload.getOneAudioFromNextCloud(audioname).subscribe(blob => {
-      this.playAudio(blob)
-    });
+    this.observers.push(
+      this.AudioUpload.getOneAudioFromNextCloud(audioname).pipe(take(1)).subscribe(blob => {
+        this.playAudio(blob)
+      })
+    )
   }
   downloadAudioFromNextCloud(audioname) {
-    this.AudioUpload.getOneAudioFromNextCloud(audioname).subscribe(blob => {
-      saveAs(blob, audioname)
-    });
+    this.observers.push(
+      this.AudioUpload.getOneAudioFromNextCloud(audioname).pipe(take(1)).subscribe(blob => {
+        saveAs(blob, audioname)
+      })
+    )
   }
   redirectToNextCloudFolder(){
-  
-    this.AudioUpload.getUrlfromNextCloudFolder().subscribe(
-      (res)=>{
-        console.log(res)
-      },
-      (error)=>{
-        console.log(error)
-      }
+    this.observers.push(
+      this.AudioUpload.getUrlfromNextCloudFolder().pipe(take(1)).subscribe(
+        (res)=>{
+          console.log(res)
+        },
+        (error)=>{
+          console.log(error)
+        }
+      )
     )
 
   }
 
   // Experimental functions
   speechtotext(index) {
-    this.AudioUpload.speechtotext(this.allAudios[index].filename).subscribe(data => {
-      this.allAudios[index].speechtotext = data[0]
-      this.json_upload(this.allAudios[index].filename, data[0])
-    });
+    this.observers.push(
+      this.AudioUpload.speechtotext(this.allAudios[index].filename).pipe(take(1)).subscribe(data => {
+        this.allAudios[index].speechtotext = data[0]
+        this.json_upload(this.allAudios[index].filename, data[0])
+      })
+    )
   }
   json_upload(audioname, speechtotext) {
     let request = {
@@ -574,8 +591,11 @@ export class AudioUploadComponent implements OnInit {
         "speechtotext": speechtotext
       }
     }
-    this.AudioUpload.upload_json(request).subscribe(data => {
-    });
+    this.observers.push(
+      this.AudioUpload.upload_json(request).pipe(take(1)).subscribe(data => {
+      })
+    )
+
   }
   
   nxtcPos(element) {
