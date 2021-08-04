@@ -43,26 +43,20 @@
     </button>
 </div>
 <br>
+<br>
 
-
-<audio #audioOption controls preload="metadata">
-    <source src='../../../assets/test.wav' type="audio/wav">
+<audio #audioOption controls preload="metadata" *ngIf="allAudios != undefined">
+    <source #src src="" type="audio/wav">
 </audio>
+
+
 
 <br>
 <mat-tab-group animationDuration="0ms">
     <mat-tab [label]="'MY-FILES' | translate">
-        <!--
-            https://material.angular.io/components/checkbox/overview
-            Ein kleiner Design Bug bei "Alle auswählen". Nicht besonders wichtig, sollte später behoben werden.
-            Der Übergang von interminate zu checked ist nicht flüssig. 
-            Um den Fehler zu reproduzieren, müssen alle Checkboxen ausgewählt werden. 
-            Es ist dann nur nötig eine Checkbox abzuwählen und wieder auszuwählen und man sieht den mangelhalfen Übergang. 
-            Um zu sehen wie es richtig aussehen soll. Wähle eine Checkbox aus und klick auf Alle auswählen, um den flüssigen Übergang vom Strich zum Haken zu sehen
-        -->
         <div *ngIf="allAudios" class="action-row">
             <span>
-                <mat-checkbox color='primary' [indeterminate]="someComplete()" (change)="checkall($event.checked)"
+                <mat-checkbox color='primary' [indeterminate]="someComplete_indexedDB()" (change)="checkall_indexedDB($event.checked)"
                     [checked]="allchecked"> {{ "SELECT-ALL" | translate}} </mat-checkbox>
             </span>
             <div>
@@ -118,17 +112,13 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> {{ "TABLE.ACTIONS" | translate}} </th>
                 <td mat-cell *matCellDef="let element; let i = index;">
-                    <button mat-mini-fab color="primary" (click)="playoneaudio(element.id, i)">
+                    <button mat-mini-fab color="primary"
+                        (click)="playAudioFromIndexedDB(element.id, element.filename)">
                         <span class="material-icons">
                             play_arrow
                         </span>
                     </button>
-
-                    <audio #audioOption controls preload="metadata">
-                        <source [src]='test[element.id]' type="audio/wav">
-                    </audio>
-
-                    <button mat-mini-fab (click)="downloadoneaudio(element.filename, element.id)"
+                    <button mat-mini-fab (click)="downloadAudioFromIndexedDB(element.id, element.filename)"
                         style="margin-left: 10px;">
                         <span class="material-icons">
                             download
@@ -176,12 +166,12 @@
                 <th mat-header-cell *matHeaderCellDef> {{ "TABLE.ACTIONS" | translate}} </th>
                 <td mat-cell *matCellDef="let element; let i = index;">
                     <button mat-mini-fab color="primary"
-                        (click)="playAudioFromNextCloud(element.filename, i)">
+                        (click)="playAudioFromNextCloud(element.filename)">
                         <span class="material-icons">
                             play_arrow
                         </span>
                     </button>
-                    <button mat-mini-fab (click)="downloadAudioFromNextCloud(element.filename, true)"
+                    <button mat-mini-fab (click)="downloadAudioFromNextCloud(element.filename)"
                         style="margin-left: 10px;">
                         <span class="material-icons">
                             download

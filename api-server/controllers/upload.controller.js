@@ -37,7 +37,7 @@ const UploadController = {
             }
             
             /// Create the Client for NextCloud
-            // Client Credentials is in .env  
+            // Client Credentials is in docker/docker-compose.yml
             const client = new nextcloudClient.Client();
             
             /// create folder and collect all necessery Information 
