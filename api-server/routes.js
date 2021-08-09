@@ -11,7 +11,7 @@ const getblob = multer()
 module.exports = function (app, keycloak) {	
 	// upload Audio Files to NextCloud; get Folder with Audio Files; get one Audio File with Content
 	router.post('/nextcloud/hochladen', authController.checkIfAuthenticated, getblob.fields([{ name: 'blobToNextCloud'}]), UploadController.uploadToNextCloud);
-	router.get('/nextcloud/getfolder', authController.checkIfAuthenticated, UploadController.listOfNextCloudFolder);
+	router.get('/nextcloud/getfolder', authController.checkIfAuthenticated, UploadController.listOfNextCloudFiles);
 	router.get('/nextcloud/file/:audioname', authController.checkIfAuthenticated, UploadController.getOneAudioFromNextCloud);
 	router.get('/nextcloud/url', authController.checkIfAuthenticated, UploadController.getNextCloudUrl);
 

@@ -114,7 +114,7 @@ const UploadController = {
             }
         }
     },
-    async listOfNextCloudFolder(req, res){
+    async listOfNextCloudFiles(req, res){
         try{
             /// Get Username
             var name = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
@@ -141,7 +141,14 @@ const UploadController = {
             /// get all File Names
             var filename = []
             for(let file of files){
-                filename.push({filename: decodeURIComponent(file.memento.baseName)})
+                let splitName = file.memento.baseName.split(".")
+                let mimeTyp = splitName[splitName.length -1]
+                console.log(mimeTyp)
+
+                if(mimeTyp == "wav"){
+                    filename.push({filename: decodeURIComponent(file.memento.baseName)})
+                }
+
             }
             
             res.status(200).send(filename)
