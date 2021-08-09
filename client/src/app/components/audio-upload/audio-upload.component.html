@@ -132,8 +132,14 @@
     <mat-tab [label]="'CLOUD' | translate">
         <div *ngIf="allAudios" class="action-row">
             <span style="margin-left: 25px;">
-                <button mat-raised-button color="primary" [disabled]="isOffline"
-                    (click)="redirectToNextCloudFolder()">{{"REDIRECT-TO-NC-FOLDER" | translate}}</button><!-- später einen link bauen -->
+                <a *ngIf="nextCloudShareLink!=''" 
+                    [href]="nextCloudShareLink" 
+                    target="_blank" 
+                    rel="noopener noreferrer">
+                    <button mat-raised-button color="primary" >
+                        {{"REDIRECT-TO-NC-FOLDER" | translate}}
+                    </button>
+                </a> 
             </span>
         </div>
 
@@ -183,7 +189,7 @@
     </mat-tab>
 
     <mat-tab [label]="'HELP.HELP' | translate">
-        <ul >
+        <ul>
             <li>
                 {{ "HELP.filename" | translate}}                
             </li>

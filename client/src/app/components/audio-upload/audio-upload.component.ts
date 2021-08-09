@@ -28,7 +28,6 @@ export class AudioUploadComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-
     // check if the funktion 'navigator.geolocation' exist
     if (!navigator.geolocation) {
       this.translater.translationAlert("GPS-NO-SUPPORT")
@@ -55,6 +54,12 @@ export class AudioUploadComponent implements OnInit {
     }
     this.listAllAudiosFromIndexedDB();
 
+    // get NextCloud Share Link
+    this.nextCloudShareLink = localStorage.getItem("nextCloudShareLink")
+    // if its empty, then get a new Share Link
+    if((this.nextCloudShareLink == "" || this.nextCloudShareLink == undefined) && !this.isOffline){
+      this.redirectToNextCloudFolder();
+    }
   }
 
   async ngOnDestroy() {
@@ -116,6 +121,9 @@ export class AudioUploadComponent implements OnInit {
   // show the state from "Nach NextCloud uploaden"
   // aslong as the NextCloud Upload isnt finished, the buttons "Nach NextCloud uploaden" and "markierte Löschen" should be deactivated
   nextcloudstatus: string = ""
+
+  // NextCloud Share Link
+  nextCloudShareLink: string = ""
 
   // RecorderRTC Functions
   async recordingStart() {
@@ -565,14 +573,14 @@ export class AudioUploadComponent implements OnInit {
     this.observers.push(
       this.AudioUpload.getUrlfromNextCloudFolder().pipe(take(1)).subscribe(
         (res)=>{
-          console.log(res)
+          this.nextCloudShareLink = res['url']
+          localStorage.setItem("nextCloudShareLink", res['url'])
         },
         (error)=>{
           console.log(error)
         }
       )
     )
-
   }
 
   // Experimental functions
