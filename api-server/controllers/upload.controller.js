@@ -15,7 +15,6 @@ const UploadController = {
             
             /// check Data and Name
             const ausgewählte_audios = req.files["blobToNextCloud"]
-            
             if(ausgewählte_audios.length == 0 ){
                 res.statusCode = 400;
                 res.end(`Error: Es wurden keine Audios ausgewählt`);
@@ -37,7 +36,7 @@ const UploadController = {
             }
             
             /// Create the Client for NextCloud
-            // Client Credentials is in .env  
+            // Client Credentials is in docker/docker-compose.yml
             const client = new nextcloudClient.Client();
             
             /// create folder and collect all necessery Information 
@@ -115,8 +114,9 @@ const UploadController = {
             }
         }
     },
-    async listOfNextCloudFolder(req, res){
+    async listOfNextCloudFiles(req, res){
         try{
+            /// Get Username
             var name = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             if(name == undefined || name == ""){
                 name = "no_Name"
@@ -124,21 +124,31 @@ const UploadController = {
                 name = name.split(" ").join("_")
             }
 
-            /* Client Credentials ist in .env zu finden */
+            /// Client Credentials can be found in docker-compose.yml  
             const client = new nextcloudClient.Client();
-            /* Dateien aus den Ordner raushollen */
+            /// Get one Audio from the Folder
             const folder = await client.getFolder("/Audio_Dateien_von_den_Gaertnern/" + name);
             
+            /// check if the Folder is empty
             if(folder == null || folder == undefined){
                 res.status(200).send([])
                 return
             }
 
+            /// get all Files
             const files = await folder.getFiles()
 
+            /// get all File Names
             var filename = []
             for(let file of files){
-                filename.push({filename: decodeURIComponent(file.memento.baseName)})
+                let splitName = file.memento.baseName.split(".")
+                let mimeTyp = splitName[splitName.length -1]
+                console.log(mimeTyp)
+
+                if(mimeTyp == "wav"){
+                    filename.push({filename: decodeURIComponent(file.memento.baseName)})
+                }
+
             }
             
             res.status(200).send(filename)
@@ -150,6 +160,7 @@ const UploadController = {
     },
     async getOneAudioFromNextCloud(req, res){
         try{
+            /// Get Username
             var username = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             if(username == undefined || username == ""){
                 username = "no_Name"
@@ -157,12 +168,13 @@ const UploadController = {
                 username = username.split(" ").join("_")
             }
 
+            /// Get Audioname
             const audionamearray = url.format({ pathname: req.originalUrl }).split('/');
             const audioname = decodeURI(audionamearray[audionamearray.length -1]) //decodeURI wandelt %C3%9C in ü um
 
-            /* Client Credentials ist in docker-compose.yml zu finden */
+            /// Client Credentials can be found in docker-compose.yml  
             const client = new nextcloudClient.Client();
-            /* Datei aus den Ordner raushollen */
+            /// Get one Audio from the Folder
             const file = await client.getFile("/Audio_Dateien_von_den_Gaertnern/" + username + "/" + audioname);
             const buffer = await file.getContent();
 
@@ -174,6 +186,7 @@ const UploadController = {
     },
     async getNextCloudUrl(req, res){
         try{
+            /// Get Username
             var username = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
             if(username == undefined || username == ""){
                 username = "no_Name"
@@ -181,16 +194,46 @@ const UploadController = {
                 username = username.split(" ").join("_")
             }
 
+            /// create Folder Path
+            const nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + username
+
+            /// Create the Client for NextCloud
             const client = new nextcloudClient.Client();
-            const folder = await client.getFolder("/Audio_Dateien_von_den_Gaertnern/");
-            const content = folder.getContent()
-            console.log("username")
-            console.log(username)
-            console.log("content")
-            console.log(content)
-            const share = await client.updateShare(folder)
             
-            res.send(content)
+            /// use Username to find the Folder 
+            var folder = await client.getFolder(nextcloud_folder_path);
+            
+            // check if folder exist
+            if(folder == null || folder == undefined){
+                // create folder
+                let nextcloud_folder = await client.createFolder(nextcloud_folder_path);
+                let upload = new nextcloudClient.UploadFilesCommand(client, { nextcloud_folder });
+                await upload.execute();
+
+                /// use Username to find the Folder 
+                folder = await client.getFolder(nextcloud_folder_path);
+            }
+
+            /// either it finds a comment in the Folder or it throws an error when its empty
+            var comment
+            try{
+                comment = await folder.getComments() 
+            }catch(e){
+                comment = []
+            }
+            
+            /// if the Folder dont has a Comment than create a share Link and add it as a Comment to the Folder
+            var shareURL
+            if(comment.length == 0){
+                const share = await client.createShare({fileSystemElement: folder})
+                shareURL = share.url
+                await folder.addComment(shareURL)
+            }else{
+                shareURL = comment[0]
+            }
+            
+            /// Send the Share Link to the User 
+            res.send({url: shareURL})
         }catch(e){
             console.log(e);
             res.statusCode = 500;

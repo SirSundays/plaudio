@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators';
 
+import { AuthService } from 'src/app/services/authservice/auth-service.service';
 import { AudioUploadService } from '../../services/audio-upload/audio-upload.service';
 import { IndexedDBService } from '../../services/indexedDB/indexed-db.service';
 import { OfflineFunctionsService } from '../../services/offline-functions/offline-functions.service';
+import { TranslaterService } from '../../services/translater/translater.service';
 
 import * as RecordRTC from 'recordrtc';
 import { saveAs } from 'file-saver';
-
-import { TranslaterService } from '../../services/translater/translater.service';
-
-import { AuthService } from 'src/app/services/authservice/auth-service.service';
 
 
 @Component({
@@ -29,7 +28,6 @@ export class AudioUploadComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-
     // check if the funktion 'navigator.geolocation' exist
     if (!navigator.geolocation) {
       this.translater.translationAlert("GPS-NO-SUPPORT")
@@ -38,6 +36,10 @@ export class AudioUploadComponent implements OnInit {
     // init indexedDB
     this.IndexedDB.initDB()
 
+    // get User Name
+    this.username.setValue(this.authService.getUserData().sub);
+
+    // check if Online
     this.isOffline = !window.navigator.onLine
     window.onoffline = (event) => {
       this.isOffline = true
@@ -46,32 +48,46 @@ export class AudioUploadComponent implements OnInit {
       this.isOffline = false
     };
 
+    // get all Audios
     if (!this.isOffline) {
-      this.username.setValue(this.authService.getUserData().sub);
       this.listallAudiosFromNextCloudfromuser();
-    } else {
-      this.username.setValue(this.authService.getUserData().sub);
     }
-
     this.listAllAudiosFromIndexedDB();
 
+    // get NextCloud Share Link
+    this.nextCloudShareLink = localStorage.getItem("nextCloudShareLink")
+    // if its empty, then get a new Share Link
+    if((this.nextCloudShareLink == "" || this.nextCloudShareLink == undefined) && !this.isOffline){
+      this.redirectToNextCloudFolder();
+    }
   }
 
   async ngOnDestroy() {
     this.recordingAbort();
+
+    // unsubscribe all Observers 
+    this.observers.forEach(observer => {
+      observer.unsubscribe()
+    });
   }
+
+  // for avoiding Memory Leaks unsubscribe all Observers 
+  observers: any = []
+
+  // false=> Online; true=> Offline
+  isOffline: boolean = false;
 
   // take the Username from Keycloak
   public isLoggedIn = false;
   public userProfile = null;
 
-  // check if the Input is valid
+  // check if the Username Input is valid
   username = new FormControl('', Validators.pattern('[a-zA-Z1-90 _]*'));
 
-  // for RecorderRTC
+  // for Recording
   public_recorder: any;
   public_stream: any;
-  recorder_einstellungen: any = {
+  recorder_settings: any = {
     type: 'audio',
     recorderType: RecordRTC.StereoAudioRecorder,
     mimeType: 'audio/wav',
@@ -87,80 +103,29 @@ export class AudioUploadComponent implements OnInit {
   }
   gps_status: string = "false"
 
-  // for the Audio Player
-  @ViewChild('stream') playerRef: ElementRef<HTMLAudioElement>;
-  public_audioblob: any;
-  playaudio = {}
-
-  // for the table
+  /// Table
+  // Table Columns
+  displayedColumns = ["check", "date", "name", "position", "actions"];
+  displayedColumnsCloud = ["date", "name", "position", "actions"];
+  // All saved Audios (only contains ID and Filename)
   allAudios: any;
   allAudiosFromNextCloud: any;
   // for the Checkbox "alle Auswählen"
   allchecked: boolean = false;
   allcheckedForNextCloud: boolean = false;
 
+  // for the Audio Player
+  @ViewChild('audioOption') audioPlayerRef: ElementRef;
+  @ViewChild('src') srcRef: ElementRef;
+
   // show the state from "Nach NextCloud uploaden"
-  nextcloudstatus: string = ""
   // aslong as the NextCloud Upload isnt finished, the buttons "Nach NextCloud uploaden" and "markierte Löschen" should be deactivated
+  nextcloudstatus: string = ""
 
-  isOffline: boolean = false;
+  // NextCloud Share Link
+  nextCloudShareLink: string = ""
 
-  // Table
-  displayedColumns = ["check", "date", "name", "position", "actions"];
-  displayedColumnsCloud = ["date", "name", "position", "actions"];
-
-  // Table - Get Date
-  getDate = function (filename) {
-    let dateStr = filename.split('--')[0];
-    let day = dateStr.substr(8, 2);
-    var months = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"];
-    let month = months[dateStr.substr(5, 2).replace(/^0+/, '') - 1];
-    let year = dateStr.substr(0, 4);
-    let hour = dateStr.substr(11, 2);
-    let minute = dateStr.substr(12, 2);
-    let seconds = dateStr.substr(14, 2);
-    let zone = dateStr.substr(17);
-    let date = new Date(`${year} ${month} ${day} ${hour}:${minute}:${seconds} ${zone}`);
-    return date.toUTCString();
-  }
-
-  // play Audio from a Blob 
-  playAudio(blob, id) {
-    try {
-
-
-      //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
-      //https://stackoverflow.com/questions/54814092/angular-viewchild-audio-element-as-htmlaudioelement
-
-      this.playAudio[id] = {}
-      this.playAudio[id].audioplayer = new Audio();
-      this.playAudio[id].paused = false;
-
-      let bloburl = URL.createObjectURL(blob);
-      this.playAudio[id].audioplayer.src = bloburl;
-      this.playAudio[id].audioplayer.load();
-      this.playAudio[id].audioplayer.play();
-
-      //this.playerRef.nativeElement.src =  bloburl
-
-      //this.playAudio[id].audioplayer.addEventListener("timeupdate", (currentTime)=>{
-      //this.songTime = currentTime;
-      //console.log(this.songTime)
-      //});
-
-      this.playAudio[id].audioplayer.addEventListener("ended", () => {
-        this.playAudio[id] = undefined
-      });
-
-    } catch (e) {
-      console.log("Audio-Error: ")
-      console.log(e.name + ": " + e.message);
-      this.translater.translationAlert("NO-AUDIO-PLAY")
-    }
-  }
-
-  // RecorderRTC Functions 
+  // RecorderRTC Functions
   async recordingStart() {
     // check if the Input is valid
     if (this.username.valid) {
@@ -177,11 +142,11 @@ export class AudioUploadComponent implements OnInit {
     try {
       if (this.public_recorder == undefined || this.public_stream == undefined) {
         this.public_stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        this.public_recorder = new RecordRTC(this.public_stream, this.recorder_einstellungen);
+        this.public_recorder = new RecordRTC(this.public_stream, this.recorder_settings);
       } else {
         if (this.public_stream.getAudioTracks()[0].readyState == "ended") {
           this.public_stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          this.public_recorder = new RecordRTC(this.public_stream, this.recorder_einstellungen);
+          this.public_recorder = new RecordRTC(this.public_stream, this.recorder_settings);
         }
       }
     } catch (e) {
@@ -282,13 +247,11 @@ export class AudioUploadComponent implements OnInit {
           filename = filename + "--" + this.location.geolocation.latitude + "-" + this.location.geolocation.longitude
         }
 
-        filename = filename + "." + this.recorder_einstellungen.mimeType.split("/")[1]
+        filename = filename + "." + this.recorder_settings.mimeType.split("/")[1]
         audio_req["filename"] = filename
 
-        // get Audio from RekorderRTC
-        this.public_audioblob = this.public_recorder.getBlob();
-        // save Audio
-        audio_req["blob"] = this.public_audioblob
+        // get Audio from RekorderRTC and save it
+        audio_req["blob"] = this.public_recorder.getBlob();
 
         // end RekorderRTC
         this.public_recorder.reset();
@@ -296,7 +259,6 @@ export class AudioUploadComponent implements OnInit {
           track.stop();
         });
         this.recordingstarted = this.public_recorder.getState()
-
 
         // send
         if (this.gps_status == "true") {
@@ -332,107 +294,6 @@ export class AudioUploadComponent implements OnInit {
         }
       }
     }
-  }
-
-  listAllAudiosFromIndexedDB() {
-    this.IndexedDB.getAll().then((data) => {
-      this.allAudios = data
-      for (let index in this.allAudios) {
-        this.allAudios[index].check = false
-      }
-      this.allchecked = false;
-    })
-  }
-  listallAudiosFromNextCloudfromuser() {
-    this.AudioUpload.listOfNextCloudFolder().subscribe(data => {
-      this.allAudiosFromNextCloud = data;
-      for (let index in this.allAudiosFromNextCloud) {
-        this.allAudiosFromNextCloud[index].check = false;
-      }
-      this.allchecked = false;
-    })
-  }
-
-  // Functions for the Table
-  playoneaudio(audioid, id) {
-    this.IndexedDB.getAudio(audioid).then((blob) => {
-      this.playAudio(blob, id)
-    })
-  }
-  downloadoneaudio(audioname, audioid) {
-    this.IndexedDB.getAudio(audioid).then((blob) => {
-      saveAs(blob, audioname)
-      this.listAllAudiosFromIndexedDB()
-    });
-  }
-  async deletemarkedfiles(audios) {
-    if (await this.translater.translationConfirm("DELETE-ALL")) {
-      for (let audio of audios.filter(audio => audio.check)) {
-        this.IndexedDB.delete(audio.filename).then(() => {
-          this.listAllAudiosFromIndexedDB()
-        })
-      }
-    }
-  }
-
-  // for the Checkboxes
-  checkall(completed: boolean) {
-    if (completed) {
-      for (let index in this.allAudios) {
-        this.allAudios[index].check = true;
-      }
-      this.allchecked = true
-    } else {
-      for (let index in this.allAudios) {
-        this.allAudios[index].check = false;
-      }
-      this.allchecked = false
-    }
-  }
-  someComplete(): boolean {
-    if (this.allAudios == null || this.allAudios == undefined || this.allAudios == []) {
-      return false;
-    }
-    if (this.allAudios.filter(t => t.check).length > 0) {
-      if (this.allAudios.length == this.allAudios.filter(t => t.check).length) {
-        this.allchecked = true;
-        return false;
-      }
-      this.allchecked = false;
-      return true;
-    }
-    this.allchecked = false;
-    return false;
-  }
-
-  // for the NextCloud Checkboxes
-  checkall_NextCloud(completed: boolean) {
-    if (completed) {
-      for (let index in this.allAudiosFromNextCloud) {
-        this.allAudiosFromNextCloud[index].check = true;
-      }
-      this.allcheckedForNextCloud = true
-    } else {
-      for (let index in this.allAudiosFromNextCloud) {
-        this.allAudiosFromNextCloud[index].check = false;
-      }
-      this.allcheckedForNextCloud = false
-    }
-  }
-  someComplete_NextCloud(): boolean {
-    if (this.allAudiosFromNextCloud == null || this.allAudiosFromNextCloud == undefined || this.allAudiosFromNextCloud == []) {
-      return false;
-    }
-    if (this.allAudiosFromNextCloud.filter(t => t.check).length > 0) {
-      if (this.allAudiosFromNextCloud.length == this.allAudiosFromNextCloud.filter(t => t.check).length) {
-        this.allcheckedForNextCloud = true;
-        return false;
-      }
-      this.allcheckedForNextCloud = false;
-      return true;
-    }
-    this.allcheckedForNextCloud = false;
-    return false;
   }
 
   // takes the Geolocation from the User
@@ -489,7 +350,89 @@ export class AudioUploadComponent implements OnInit {
     );
   }
 
-  // NextCloud Functions
+  /// Get All Data from the Source and show it in the Tables
+  listAllAudiosFromIndexedDB() {
+    this.IndexedDB.getAll().then(async (data) => {
+      this.allAudios = data
+      for (let index in this.allAudios) {
+        this.allAudios[index].check = false
+      }
+      this.allchecked = false;
+    })
+  }
+  listallAudiosFromNextCloudfromuser() {
+    this.observers.push(
+      this.AudioUpload.listOfNextCloudFolder().pipe(take(1)).subscribe(data => {
+        this.allAudiosFromNextCloud = data;
+        for (let index in this.allAudiosFromNextCloud) {
+          this.allAudiosFromNextCloud[index].check = false;
+        }
+        this.allchecked = false;
+      })
+    )
+  }
+
+  /// Basic Table Functions
+  // get Date and convert it to a readable String
+  getDate = function (filename) {
+    
+    let dateStr = filename.split('--')[0];
+
+    let YearMonthDay = dateStr.substr(0, 10);
+    let hour = dateStr.substr(11, 2);
+    let minute = dateStr.substr(12, 2);
+    let seconds = dateStr.substr(14, 2);
+    let zone = dateStr.substr(17);
+
+    let date = `${YearMonthDay} ${hour}:${minute}:${seconds} ${zone}`
+    
+    return date
+  }
+  // Play a Blob in a HTML Audio Element
+  async playAudio(blob){
+    try{
+      const bloburl = URL.createObjectURL(blob);
+
+      this.srcRef.nativeElement.src = bloburl
+      this.audioPlayerRef.nativeElement.load()
+      this.audioPlayerRef.nativeElement.play()
+      
+      /*
+      this.playAudio[id].audioplayer.addEventListener("ended", () => {
+        this.playAudio[id] = undefined
+      });
+      */
+
+    }catch (e) {
+      console.log("Audio-Error: ")
+      console.log(e.name + ": " + e.message);
+      this.translater.translationAlert("NO-AUDIO-PLAY")
+    }
+  }
+
+  // Functions for the "Meine Daten" Table
+  playAudioFromIndexedDB(audioid) {
+    this.IndexedDB.getAudio(audioid).then((blob) => {
+      this.playAudio(blob)
+    });
+  }
+  downloadAudioFromIndexedDB(audioid, audioname) {
+    this.IndexedDB.getAudio(audioid).then((blob) => {
+      saveAs(blob, audioname)
+      this.listAllAudiosFromIndexedDB()
+    });
+  }
+
+  // Functions to delete or send Audio Files from the "Meine Daten" Table
+  async deletemarkedfiles(audios) {
+    if (await this.translater.translationConfirm("DELETE-ALL")) {
+      for (let audio of audios.filter(audio => audio.check)) {
+        this.IndexedDB.delete(audio.filename).then(() => {
+          this.listAllAudiosFromIndexedDB()
+        })
+      }
+    }
+  }
   async uploadToNextCloud() {
     var checked_audios = this.allAudios.filter(audio => audio.check)
 
@@ -507,76 +450,147 @@ export class AudioUploadComponent implements OnInit {
         audio_request.append("blobToNextCloud", blob, audio.filename)
       }
 
-      this.AudioUpload.nextcloudupload(audio_request).subscribe(
-        (data) => {
-          this.listAllAudiosFromIndexedDB();
-          this.listallAudiosFromNextCloudfromuser();
-          this.nextcloudstatus = "SUCCESS";
+      this.observers.push(
+        this.AudioUpload.nextcloudupload(audio_request).pipe(take(1)).subscribe(
+          (data) => {
+            this.listAllAudiosFromIndexedDB();
+            this.listallAudiosFromNextCloudfromuser();
+            this.nextcloudstatus = "SUCCESS";
 
-          // If not all audios uploaded successfully, don't delete everything
-          if (data['error'] != undefined) {
-            this.translater.translationAlert("NC-ERROR." + data['error'])
-            for (let audio of checked_audios) {
-              // dont delete it            
-              if (data['failedFiles'].indexOf(audio.filename) !== -1) {
-                continue
+            // If not all audios uploaded successfully, don't delete everything
+            if (data['error'] != undefined) {
+              this.translater.translationAlert("NC-ERROR." + data['error'])
+              for (let audio of checked_audios) {
+                // dont delete it            
+                if (data['failedFiles'].indexOf(audio.filename) !== -1) {
+                  continue
+                }
+                // delete it
+                this.IndexedDB.delete(audio.filename).then(() => {
+                  this.listAllAudiosFromIndexedDB()
+                });
               }
-              // delete it
-              this.IndexedDB.delete(audio.filename).then(() => {
-                this.listAllAudiosFromIndexedDB()
-              });
-            }
 
-          } else {
-            for (let audio of checked_audios) {
-              this.IndexedDB.delete(audio.filename).then(() => {
-                this.listAllAudiosFromIndexedDB()
-              });
+            } else {
+              for (let audio of checked_audios) {
+                this.IndexedDB.delete(audio.filename).then(() => {
+                  this.listAllAudiosFromIndexedDB()
+                });
+              }
             }
+          },
+          (error) => {
+            this.translater.translationAlert("NC-ERROR." + error.error);
+            this.listAllAudiosFromIndexedDB();
+            this.listallAudiosFromNextCloudfromuser();
+            this.nextcloudstatus = "RELOAD";
           }
-        },
-        (error) => {
-          this.translater.translationAlert("NC-ERROR." + error.error);
-          this.listAllAudiosFromIndexedDB();
-          this.listallAudiosFromNextCloudfromuser();
-          this.nextcloudstatus = "RELOAD";
-        }
-      );
+        )
+      )
 
     } else {
       return;
     }
 
   }
-  playAudioFromNextCloud(audioname, id) {
-    this.AudioUpload.getOneAudioFromNextCloud(audioname).subscribe(blob => {
-      this.playAudio(blob, id)
-    });
+
+  // for the "Meine Daten" Checkboxes
+  checkall_indexedDB(completed: boolean) {
+    if (completed) {
+      for (let index in this.allAudios) {
+        this.allAudios[index].check = true;
+      }
+      this.allchecked = true
+    } else {
+      for (let index in this.allAudios) {
+        this.allAudios[index].check = false;
+      }
+      this.allchecked = false
+    }
+  }
+  someComplete_indexedDB(): boolean {
+    if (this.allAudios == null || this.allAudios == undefined || this.allAudios == []) {
+      return false;
+    }
+    if (this.allAudios.filter(t => t.check).length > 0) {
+      if (this.allAudios.length == this.allAudios.filter(t => t.check).length) {
+        this.allchecked = true;
+        return false;
+      }
+      this.allchecked = false;
+      return true;
+    }
+    this.allchecked = false;
+    return false;
+  }
+
+  // for the "NextCloud" Checkboxes
+  checkall_NextCloud(completed: boolean) {
+    if (completed) {
+      for (let index in this.allAudiosFromNextCloud) {
+        this.allAudiosFromNextCloud[index].check = true;
+      }
+      this.allcheckedForNextCloud = true
+    } else {
+      for (let index in this.allAudiosFromNextCloud) {
+        this.allAudiosFromNextCloud[index].check = false;
+      }
+      this.allcheckedForNextCloud = false
+    }
+  }
+  someComplete_NextCloud(): boolean {
+    if (this.allAudiosFromNextCloud == null || this.allAudiosFromNextCloud == undefined || this.allAudiosFromNextCloud == []) {
+      return false;
+    }
+    if (this.allAudiosFromNextCloud.filter(t => t.check).length > 0) {
+      if (this.allAudiosFromNextCloud.length == this.allAudiosFromNextCloud.filter(t => t.check).length) {
+        this.allcheckedForNextCloud = true;
+        return false;
+      }
+      this.allcheckedForNextCloud = false;
+      return true;
+    }
+    this.allcheckedForNextCloud = false;
+    return false;
+  }
+
+  // Functions for the "NextCloud" Table
+  playAudioFromNextCloud(audioname) {
+    this.observers.push(
+      this.AudioUpload.getOneAudioFromNextCloud(audioname).pipe(take(1)).subscribe(blob => {
+        this.playAudio(blob)
+      })
+    )
   }
   downloadAudioFromNextCloud(audioname) {
-    this.AudioUpload.getOneAudioFromNextCloud(audioname).subscribe(blob => {
-      saveAs(blob, audioname)
-    });
+    this.observers.push(
+      this.AudioUpload.getOneAudioFromNextCloud(audioname).pipe(take(1)).subscribe(blob => {
+        saveAs(blob, audioname)
+      })
+    )
   }
   redirectToNextCloudFolder(){
-    
-    this.AudioUpload.getUrlfromNextCloudFolder().subscribe(
-      (res)=>{
-        console.log(res)
-      },
-      (error)=>{
-        console.log(error)
-      }
+    this.observers.push(
+      this.AudioUpload.getUrlfromNextCloudFolder().pipe(take(1)).subscribe(
+        (res)=>{
+          this.nextCloudShareLink = res['url']
+          localStorage.setItem("nextCloudShareLink", res['url'])
+        },
+        (error)=>{
+          console.log(error)
+        }
+      )
     )
-
   }
 
   // Experimental functions
   speechtotext(index) {
-    this.AudioUpload.speechtotext(this.allAudios[index].filename).subscribe(data => {
-      this.allAudios[index].speechtotext = data[0]
-      this.json_upload(this.allAudios[index].filename, data[0])
-    });
+    this.observers.push(
+      this.AudioUpload.speechtotext(this.allAudios[index].filename).pipe(take(1)).subscribe(data => {
+        this.allAudios[index].speechtotext = data[0]
+        this.json_upload(this.allAudios[index].filename, data[0])
+      })
+    )
   }
   json_upload(audioname, speechtotext) {
     let request = {
@@ -585,8 +599,11 @@ export class AudioUploadComponent implements OnInit {
         "speechtotext": speechtotext
       }
     }
-    this.AudioUpload.upload_json(request).subscribe(data => {
-    });
+    this.observers.push(
+      this.AudioUpload.upload_json(request).pipe(take(1)).subscribe(data => {
+      })
+    )
+
   }
   
   nxtcPos(element) {

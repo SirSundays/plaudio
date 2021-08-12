@@ -40,6 +40,7 @@
         "REC-STOP": "Om een lopende opname te stoppen druk op het rode knopje met het \"Stop\"-symbool. De opname wordt dan onherroepelijk verwijderd.",
         "REC-SEND": "Wil jij een lopende opname opslaan dan druk op het knopje met het \"pijl\"-symbool.",
         "filename": "U kunt het bestand zelf een naam geven in het \"File naam\". Uw gebruikersnaam wordt standaard gebruikt. Uw wijzigingen in de bestandsnaam worden niet opgeslagen, zodra de pagina opnieuw wordt geladen, wordt de bestandsnaam teruggezet naar de gebruikersnaam.", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt",
+        "AUDIO-PLAYER":"Audio wordt afgespeeld in deze audiospeler.", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt", 
         "MY-FILES": {
             "MY-FILES": "Onder \"mijn files\" vindt u de door u gemaakte audio die nog niet is geüpload naar NextCloud. Deze audio's worden opgeslagen op uw apparaat, als u inlogt op een ander apparaat, worden de audio's niet overgebracht naar het andere apparaat.", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt",
             "FIRST-COLUMN": "In de eerste kolom kunnen audio's worden geselecteerd om ze te verwijderen of naar NextCloud te sturen", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 

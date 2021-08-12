@@ -44,37 +44,33 @@
 </div>
 <br>
 
-<!--
-<audio #stream controls>
-    
+<audio #audioOption controls preload="metadata">
+    <source #src type="audio/wav">
 </audio>
--->
 
 <br>
 <mat-tab-group animationDuration="0ms">
     <mat-tab [label]="'MY-FILES' | translate">
-        <!--
-            https://material.angular.io/components/checkbox/overview
-            Ein kleiner Design Bug bei "Alle auswählen". Nicht besonders wichtig, sollte später behoben werden.
-            Der Übergang von interminate zu checked ist nicht flüssig. 
-            Um den Fehler zu reproduzieren, müssen alle Checkboxen ausgewählt werden. 
-            Es ist dann nur nötig eine Checkbox abzuwählen und wieder auszuwählen und man sieht den mangelhalfen Übergang. 
-            Um zu sehen wie es richtig aussehen soll. Wähle eine Checkbox aus und klick auf Alle auswählen, um den flüssigen Übergang vom Strich zum Haken zu sehen
-        -->
         <div *ngIf="allAudios" class="action-row">
             <span>
-                <mat-checkbox color='primary' [indeterminate]="someComplete()" (change)="checkall($event.checked)"
+                <mat-checkbox color='primary' [indeterminate]="someComplete_indexedDB()" (change)="checkall_indexedDB($event.checked)"
                     [checked]="allchecked"> {{ "SELECT-ALL" | translate}} </mat-checkbox>
             </span>
-            <span style="margin-left: 25px;">
-                <button mat-raised-button color="warn" [disabled]="nextcloudstatus == 'WAIT'"
-                    (click)="deletemarkedfiles(allAudios)">{{ "DELETE" | translate}}</button>
-            </span>
-            <span style="margin-left: 25px;">
-                <button mat-raised-button color="primary" [disabled]="nextcloudstatus == 'WAIT' || isOffline"
-                    (click)="uploadToNextCloud()">{{
-                    "UPLOAD-CLOUD" | translate}}</button>
-            </span>
+            <div>
+                <span style="margin-left: 25px;">
+                    <button mat-raised-button color="warn" [disabled]="nextcloudstatus == 'WAIT'"
+                        (click)="deletemarkedfiles(allAudios)">
+                        {{ "DELETE" | translate}}
+                    </button>
+                </span>
+                <span style="margin-left: 25px;">
+                    <button mat-raised-button color="primary" [disabled]="nextcloudstatus == 'WAIT' || isOffline"
+                        (click)="uploadToNextCloud()">
+                        {{"UPLOAD-CLOUD" | translate}}
+                    </button>
+                </span>
+            </div>
+            
             <span style="margin-left: 25px;" *ngIf="nextcloudstatus">
                 {{ "NC-STATUS." + nextcloudstatus | translate}}
             </span>
@@ -113,12 +109,13 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> {{ "TABLE.ACTIONS" | translate}} </th>
                 <td mat-cell *matCellDef="let element; let i = index;">
-                    <button mat-mini-fab color="primary" (click)="playoneaudio(element.id, i)">
+                    <button mat-mini-fab color="primary"
+                        (click)="playAudioFromIndexedDB(element.id, element.filename)">
                         <span class="material-icons">
                             play_arrow
                         </span>
                     </button>
-                    <button mat-mini-fab (click)="downloadoneaudio(element.filename, element.id)"
+                    <button mat-mini-fab (click)="downloadAudioFromIndexedDB(element.id, element.filename)"
                         style="margin-left: 10px;">
                         <span class="material-icons">
                             download
@@ -135,8 +132,14 @@
     <mat-tab [label]="'CLOUD' | translate">
         <div *ngIf="allAudios" class="action-row">
             <span style="margin-left: 25px;">
-                <button mat-raised-button color="primary" [disabled]="isOffline"
-                    (click)="redirectToNextCloudFolder()">{{"REDIRECT-TO-NC-FOLDER" | translate}}</button><!-- später einen link bauen -->
+                <a *ngIf="nextCloudShareLink!=''" 
+                    [href]="nextCloudShareLink" 
+                    target="_blank" 
+                    rel="noopener noreferrer">
+                    <button mat-raised-button color="primary" >
+                        {{"REDIRECT-TO-NC-FOLDER" | translate}}
+                    </button>
+                </a> 
             </span>
         </div>
 
@@ -166,13 +169,12 @@
                 <th mat-header-cell *matHeaderCellDef> {{ "TABLE.ACTIONS" | translate}} </th>
                 <td mat-cell *matCellDef="let element; let i = index;">
                     <button mat-mini-fab color="primary"
-                        (click)="playAudioFromNextCloud(element.filename, i)">
+                        (click)="playAudioFromNextCloud(element.filename)">
                         <span class="material-icons">
                             play_arrow
                         </span>
                     </button>
-
-                    <button mat-mini-fab (click)="downloadAudioFromNextCloud(element.filename, true)"
+                    <button mat-mini-fab (click)="downloadAudioFromNextCloud(element.filename)"
                         style="margin-left: 10px;">
                         <span class="material-icons">
                             download
@@ -187,7 +189,7 @@
     </mat-tab>
 
     <mat-tab [label]="'HELP.HELP' | translate">
-        <ul >
+        <ul>
             <li>
                 {{ "HELP.filename" | translate}}                
             </li>
@@ -235,6 +237,14 @@
                         </p>
                     </li>
                 </ul>
+            </li>
+            <li>
+                {{"HELP.AUDIO-PLAYER" | translate}}
+                <p class = "no-interaction">
+                    <audio controls preload="metadata">
+                        <source type="audio/wav">
+                    </audio>
+                </p>
             </li>
             <li>
                 {{"HELP.MY-FILES.MY-FILES" | translate}}

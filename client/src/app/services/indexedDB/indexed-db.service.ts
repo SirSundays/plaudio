@@ -9,7 +9,7 @@ import Dexie from 'dexie';
 export class IndexedDBService {
 
   constructor() { }
-  public db = new Dexie('AudioDB');
+  public db;
   initDB(){
     this.db = new Dexie('AudioDB');
     this.db.version(1).stores({
