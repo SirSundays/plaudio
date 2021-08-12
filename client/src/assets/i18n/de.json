@@ -39,6 +39,7 @@
         "REC-STOP": "Um eine laufende Aufnahme abzubrechen drücken Sie auf den roten Knopf mit dem \"Stopp\"-Symbol. Die Aufnahme wird dann unwiederbringlich gestoppt.",
         "REC-SEND": "Möchten Sie eine laufende Aufnahme beenden und abspeichern, dann drücken Sie auf den Knopf mit dem Pfeil-Symbol.",
         "filename": "Im Feld \"Dateiname\" können sie die Datei selbst benennen. Standardmäßig wird ihr Benutzername verwendet. Ihre Änderungen am Dateinamen werden nicht gespeichert, sobald die Seite neugeladen wird, wird der Dateiname wieder zum Benutzernamen zurückgesetzt.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
+        "AUDIO-PLAYER": "Audios werden in diesem Audio Player abgespielt.",
         "MY-FILES": {
             "MY-FILES": "Unter \"Meine Dateien\" finden sie ihre erstellten Audios, die noch nicht nach NextCloud hochgeladen wurden. Diese Audios sind auf ihrem Gerät gespeichert, wenn sie sich auf einem anderen Gerät anmelden, werden die Audios nicht auf dem anderen Gerät übertragen.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
             "FIRST-COLUMN": "In der ersten Spalte können Audios ausgewählt werden, um diese zu löschen oder nach NextCloud zu senden", 
