@@ -11,8 +11,8 @@ services:
     environment: 
       NODE_ENV: production
       M_PROD: 'true'
-      NEXTCLOUD_USERNAME: dmitrij
-      NEXTCLOUD_PASSWORD: nextcloud
+      NEXTCLOUD_USERNAME: max
+      NEXTCLOUD_PASSWORD: mustermann
       NEXTCLOUD_URL: https://cloud.example.com
     networks:
       - plaudio-network
