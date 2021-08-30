@@ -1,36 +1,36 @@
 {
     "TITLE": "Sprachrekorder",
     "FILE-NAME": "Dateiname",
-    "FILE-NAME-ERROR": "Achtung: Buchstaben, Zahlen, leerzeichen und das Symbol _ sind erlaubt.",
+    "FILE-NAME-ERROR": "Achtung: Buchstaben, Zahlen, Leerzeichen und das Symbol _ sind erlaubt.",
     "GPS": {
         "true": "GPS aktiviert",
         "false": "GPS deaktiviert",
         "WAIT": "Warte auf GPS-Daten",
-        "permission": "Bitte erlauben sie dem Browser die Nutzung von GPS",
+        "permission": "Bitte erlauben Sie dem Browser die Nutzung von GPS",
         "error": "Ein Fehler ist aufgetreten"
     },
     "SELECT-ALL": "Alle auswählen",
-    "DELETE": "markierte Löschen",
-    "UPLOAD-CLOUD": "Nach NextCloud hochladen",
+    "DELETE": "Markierte löschen",
+    "UPLOAD-CLOUD": "Hochladen zu NextCloud",
     "MY-FILES": "Meine Dateien",
     "CLOUD": "NextCloud",
     "NC-STATUS": {
-        "CONFIRM": "Wollen sie wirklich die Audio-Dateien nach NextCloud hochladen?",
-        "NO-AUDIO-SELECT": "Keine Audios ausgewählt",
-        "WAIT": "Bitte warten, solange die Audios hochgeladen werden",
-        "SUCCESS": "Upload Erfolgreich!",
-        "RELOAD": "Bitte Seite neuladen und nochmal versuchen"
+        "CONFIRM": "Wollen Sie die Audio-Dateien wirklich auf NextCloud hochladen?",
+        "NO-AUDIO-SELECT": "Keine Audio-Dateien ausgewählt",
+        "WAIT": "Bitte warten, solange die Audio-Dateien hochgeladen werden",
+        "SUCCESS": "Upload erfolgreich!",
+        "RELOAD": "Bitte Seite neu laden und erneut versuchen"
     },
     "NC-ERROR": {
-        "UNEXPECTED": "Ein Unerwarteter Fehler ist aufgetreten.",
-        "UPLOADFAILED": "Nicht alle Audios wurden nach NextCloud hochgeladen!",
-        "AUDIO": "Die Audiodatei ist fehlerhaft im Server angekommen",
-        "FILENAME": "Ein Audio Name beinhaltet ein unzulässiges Symbol (/, \\)"
+        "UNEXPECTED": "Ein unerwarteter Fehler ist aufgetreten.",
+        "UPLOADFAILED": "Nicht alle Audio-Dateien wurden auf NextCloud hochgeladen!",
+        "AUDIO": "Die Audio-Datei ist fehlerhaft auf dem Server angekommen",
+        "FILENAME": "Der Name einer Audio-Datei enthält ein unzulässiges Symbol (/, \\)"
     },
-    "GPS-NO-SUPPORT": "Ihr Browser unterstützt GPS nicht.\nBitte wechseln sie ihren Webbrowser.\nPassende Webbrowser wären z.B. Firefox oder Google Chrome",
-    "GPS-NO-LOCATION": "Geolocation konnte nicht bestimmt werden. \nBitte laden sie die Seite neu und versuchen es erneut.",
-    "NO-AUDIO-PLAY": "Audio konnte nicht abgespielt werden",
-    "DELETE-ALL": "Wollen sie wirklich die Audios löschen?",
+    "GPS-NO-SUPPORT": "Ihr Browser unterstützt GPS nicht.\nBitte wechseln Sie ihren Webbrowser.\nPassende Webbrowser sind z.B. Firefox oder Google Chrome",
+    "GPS-NO-LOCATION": "Standort konnte nicht ermittelt werden. \nBitte laden Sie die Seite neu und versuchen Sie es erneut.",
+    "NO-AUDIO-PLAY": "Audio-Datei konnte nicht abgespielt werden",
+    "DELETE-ALL": "Wollen Sie wirklich die Audio-Dateien löschen?",
     "HELP": {
         "HELP": "Hilfe",
         "GPS": "GPS kann nach Wahl aktiviert oder deaktiviert werden. Es ist nicht verpflichtend. Stellen Sie sicher, dass GPS auf ihrem Gerät aktiviert und die Nutzung für den Browser gestattet ist.",
@@ -41,17 +41,17 @@
         "filename": "Im Feld \"Dateiname\" können sie die Datei selbst benennen. Standardmäßig wird ihr Benutzername verwendet. Ihre Änderungen am Dateinamen werden nicht gespeichert, sobald die Seite neugeladen wird, wird der Dateiname wieder zum Benutzernamen zurückgesetzt.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
         "AUDIO-PLAYER": "Audios werden in diesem Audio Player abgespielt.",
         "MY-FILES": {
-            "MY-FILES": "Unter \"Meine Dateien\" finden sie ihre erstellten Audios, die noch nicht nach NextCloud hochgeladen wurden. Diese Audios sind auf ihrem Gerät gespeichert, wenn sie sich auf einem anderen Gerät anmelden, werden die Audios nicht auf dem anderen Gerät übertragen.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
-            "FIRST-COLUMN": "In der ersten Spalte können Audios ausgewählt werden, um diese zu löschen oder nach NextCloud zu senden", 
-            "SECOND-COLUMN": "In der zweiten Spalte wird das Datum angezeigt.", 
+            "MY-FILES": "Unter \"Meine Dateien\" finden Sie Ihre erstellten Audio-Dateien, die noch nicht auf NextCloud hochgeladen wurden. Diese Audio-Dateien werden auf Ihrem Gerät gespeichert. Wenn Sie sich auf einem anderen Gerät anmelden, werden die Audio-Dateien nicht auf das andere Gerät übertragen.",
+            "FIRST-COLUMN": "In der ersten Spalte können Audio-Dateien zum Löschen oder zum Senden an NextCloud ausgewählt werden.", 
+            "SECOND-COLUMN": "Die zweite Spalte zeigt das Aufnahmedatum an.", 
             "THIRD-COLUMN": "In der dritten Spalte wird der Dateiname angezeigt.", 
-            "FOURTH-COLUMN": "In der vierten Spalte kann entweder die GPS Daten durch Google Maps angezeigt werden oder es ist ein leeres Feld, weil die GPS Daten für das Audio nicht gesammelt wurden.", 
-            "FIFTH-COLUMN1": "In der fünften Spalte kann das Audio abgespielt", 
-            "FIFTH-COLUMN2": "oder gedownloaded werden." 
+            "FOURTH-COLUMN": "In der vierten Spalte können entweder die GPS-Daten von Google Maps angezeigt werden oder es ist ein leeres Feld, da keine GPS-Daten für die entsprechende Audio-Datei erfasst wurden.", 
+            "FIFTH-COLUMN1": "In der fünften Spalte können Sie die Audio-Datei abspielen", 
+            "FIFTH-COLUMN2": "oder herunterladen." 
         },
         "NEXTCLOUD": {
-            "NEXTCLOUD": "Unter \"NextCloud\" finden sie alle ihre hochgeladenen Audios. Die Audios werden in dem gleichen Tabelle Format aufgelistet, wie in \"Meine Dateien\". Damit die Audios in NextCloud nicht ausversehen gelöscht werden, wird keine löschen Funktion angeboten. Falls sie eine oder mehrere Datein löschen wollen, können sie sich gerne an das \"Dev Team?\" melden ",
-            "REDIRECT-TO-NEXTCLOUD": "Wenn sie ihren Ordner in NextCloud besuchen wollen, dann können sie auf \"Zum NextCloud Ordner umleiten\" drücken. Dort werden sie ihre hochgeladenen Audios und Transkripte finden."
+            "NEXTCLOUD": "Im Bereich \"NextCloud\" finden Sie alle Ihre hochgeladenen Audio-Dateien. Die Audio-Dateien werden im gleichen Tabellenformat wie in \"Meine Dateien\" aufgelistet. Um ein versehentliches Löschen von Audio-Dateien auf NextCloud zu vermeiden, ist keine Löschfunktion vorgesehen. Wenn Sie eine oder mehrere Dateien löschen möchten, wenden Sie sich bitte an das Entwicklerteam.",
+            "REDIRECT-TO-NEXTCLOUD": "Wenn Sie Ihren Ordner auf NextCloud ansehen möchten, können Sie auf \"Zum NextCloud Ordner umleiten\" drücken. Dort finden Sie Ihre hochgeladenen Audio-Dateien und die zugehörigen Transkripte."
         }
     },
     "TABLE": {
@@ -66,7 +66,7 @@
     "PASSWORD": "Passwort",
     "AUTH": {
         "UNAUTHORIZED": "Falscher Benutzername oder falsches Passwort",
-        "VERIFY-UNAUTHORIZED": "Sie werden abgemeldet, weil ihr Anmelde Token ungültig ist!"
+        "VERIFY-UNAUTHORIZED": "Sie werden abgemeldet, weil ihr Anmelde-Token ungültig ist!"
     },
     "REDIRECT-TO-NC-FOLDER": "Zum NextCloud Ordner umleiten"  
 }
