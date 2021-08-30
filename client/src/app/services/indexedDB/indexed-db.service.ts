@@ -47,8 +47,12 @@ export class IndexedDBService {
   }
 
   async delete(filename){
-    let id = await this.db["filename"].where("filename").anyOf(filename).delete()
+    let obj = await this.db["filename"].get({"filename": filename})
+    let id = obj.id
+    
+    await this.db["filename"].where("id").anyOf(id).delete()
     await this.db["audio"].where("id").anyOf(id).delete()
+    
   }
 
 }
