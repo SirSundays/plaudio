@@ -143,7 +143,6 @@ const UploadController = {
             for(let file of files){
                 let splitName = file.memento.baseName.split(".")
                 let mimeTyp = splitName[splitName.length -1]
-                console.log(mimeTyp)
 
                 if(mimeTyp == "wav"){
                     filename.push({filename: decodeURIComponent(file.memento.baseName)})
@@ -217,7 +216,7 @@ const UploadController = {
             /// either it finds a comment in the Folder or it throws an error when its empty
             var comment
             try{
-                comment = await folder.getComments() 
+                comment = await folder.getComments()
             }catch(e){
                 comment = []
             }
@@ -227,9 +226,28 @@ const UploadController = {
             if(comment.length == 0){
                 const share = await client.createShare({fileSystemElement: folder})
                 shareURL = share.url
+
+                /// check the URL
+                if(typeof shareURL == "string"){
+                    // The Url needs to have an https
+                    let splitShareURL = shareURL.split(":")
+                    if(splitShareURL[0] != "https"){
+                        shareURL = "https:" + splitShareURL[1]
+                    }
+                }
+
                 await folder.addComment(shareURL)
             }else{
                 shareURL = comment[0]
+            }
+
+            /// check the URL
+            if(typeof shareURL == "string"){
+                // The Url needs to have an https
+                let splitShareURL = shareURL.split(":")
+                if(splitShareURL[0] != "https"){
+                    shareURL = "https:" + splitShareURL[1]
+                }
             }
             
             /// Send the Share Link to the User 
