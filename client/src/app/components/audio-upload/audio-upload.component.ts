@@ -54,12 +54,8 @@ export class AudioUploadComponent implements OnInit {
     }
     this.listAllAudiosFromIndexedDB();
 
-    // get NextCloud Share Link
-    this.nextCloudShareLink = localStorage.getItem("nextCloudShareLink")
-    // if its empty, then get a new Share Link
-    if((this.nextCloudShareLink == "" || this.nextCloudShareLink == undefined) && !this.isOffline){
-      this.redirectToNextCloudFolder();
-    }
+    // get Share Link
+    this.redirectToNextCloudFolder();
   }
 
   async ngOnDestroy() {
@@ -106,7 +102,7 @@ export class AudioUploadComponent implements OnInit {
   /// Table
   // Table Columns
   displayedColumns = ["check", "date", "name", "position", "actions"];
-  displayedColumnsCloud = ["date", "name", "position", "actions"];
+  displayedColumnsCloud = ["date", "name", "position"];
   // All saved Audios (only contains ID and Filename)
   allAudios: any;
   allAudiosFromNextCloud: any;

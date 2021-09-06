@@ -52,7 +52,8 @@
         },
         "NEXTCLOUD": {
             "NEXTCLOUD": "Je kunt al je geüploade audio vinden onder \"NextCloud\". De audio's worden weergegeven in hetzelfde tabelformaat als in \"Mijn files\". Om ervoor te zorgen dat de audio niet per ongeluk in NextCloud wordt verwijderd, wordt er geen verwijderfunctie aangeboden. Als u een of meer bestanden wilt verwijderen, neem dan contact op met het \"Dev Team?\"", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
-            "REDIRECT-TO-NEXTCLOUD": "Als u uw map in NextCloud wilt bezoeken, kunt u op \"omleiden naar de map NextCloud\" drukken. Daar vindt u uw geüploade audio en transcripties.", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt"
+            "REDIRECT-TO-NEXTCLOUD": "Als u uw map in NextCloud wilt bezoeken, kunt u op \"omleiden naar de map NextCloud\" drukken. Daar vindt u uw geüploade audio en transcripties.", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt",
+            "PLAYORDOWNLOAD": "Als u uw audio wilt afspelen of downloaden, moet u de link \"Redirect to NextCloud folder\" naar NextCloud gebruiken. Daar kun je je geüploade audio afspelen of downloaden.", "löschMichBitteIchBinNurEinKommentar3":"Es wurde mit Google übersetzt"
         }
     },
     "TABLE": {

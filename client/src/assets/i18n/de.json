@@ -51,7 +51,8 @@
         },
         "NEXTCLOUD": {
             "NEXTCLOUD": "Unter \"NextCloud\" finden sie alle ihre hochgeladenen Audios. Die Audios werden in dem gleichen Tabelle Format aufgelistet, wie in \"Meine Dateien\". Damit die Audios in NextCloud nicht ausversehen gelöscht werden, wird keine löschen Funktion angeboten. Falls sie eine oder mehrere Datein löschen wollen, können sie sich gerne an das \"Dev Team?\" melden ",
-            "REDIRECT-TO-NEXTCLOUD": "Wenn sie ihren Ordner in NextCloud besuchen wollen, dann können sie auf \"Zum NextCloud Ordner umleiten\" drücken. Dort werden sie ihre hochgeladenen Audios und Transkripte finden."
+            "REDIRECT-TO-NEXTCLOUD": "Wenn sie ihren Ordner in NextCloud besuchen wollen, dann können sie auf \"Zum NextCloud Ordner umleiten\" drücken. Dort werden sie ihre hochgeladenen Audios und Transkripte finden.",
+            "PLAYORDOWNLOAD": "Wenn sie Ihr Audio abspielen oder downloaden wollen, so müssen sie über den \"Zum NextCloud Ordner umleiten\" Link nach NextCloud. Dort können sie ihre hochgeladenen Audios abspielen oder downloaden."
         }
     },
     "TABLE": {

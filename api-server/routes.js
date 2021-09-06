@@ -6,9 +6,11 @@ const authController = require('./controllers/auth.controller');
 
 // Um den Blob zu erhalten
 const multer  = require('multer')
-const getblob = multer()
+const getblob = multer({
+	limits: { fileSize: 30 *1024 *1024 } //30MB
+})
 
-module.exports = function (app, keycloak) {	
+module.exports = function (app) {
 	// upload Audio Files to NextCloud; get Folder with Audio Files; get one Audio File with Content
 	router.post('/nextcloud/hochladen', authController.checkIfAuthenticated, getblob.fields([{ name: 'blobToNextCloud'}]), UploadController.uploadToNextCloud);
 	router.get('/nextcloud/getfolder', authController.checkIfAuthenticated, UploadController.listOfNextCloudFiles);
@@ -21,7 +23,7 @@ module.exports = function (app, keycloak) {
 
 	// Auth
 	router.post('/login', authController.login);
-	router.get('/verify', authController.verifyToken)
+	router.get('/verify', authController.verifyToken);
 	
 	app.use('/api/pre', router);
 };
