@@ -7,7 +7,7 @@ const authController = require('./controllers/auth.controller');
 // Um den Blob zu erhalten
 const multer  = require('multer')
 const getblob = multer({
-	limits: { fileSize: 30 *1024 *1024 } //30MB
+	//limits: { fileSize: 50 *1024 *1024 } //30MB
 })
 
 module.exports = function (app) {
