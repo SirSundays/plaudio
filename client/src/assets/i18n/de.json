@@ -38,7 +38,7 @@
         "REC-PAUSE": "Wenn Sie eine Aufnahme gestartet haben, können Sie diese über das \"Pause\"-Symbol anhalten und zu einem späteren Zeitpunkt fortsetzen. Um eine Aufnahme fortzusetzen, drücken Sie erneut auf das blaue Mikrofon-Symbol.",
         "REC-STOP": "Um eine laufende Aufnahme abzubrechen, drücken Sie das rote \"Stopp\"-Symbol. Die Aufnahme wird beendet und unwiderruflich gelöscht.",
         "REC-SEND": "Möchten Sie eine laufende Aufnahme beenden und abspeichern, drücken Sie das blaue Pfeil-Symbol.",
-        "filename": "Im Feld \"Dateiname\" können Sie die Datei umbenennen. Standardmäßig wird Ihr Benutzername (und Datum???) verwendet (\"Benutzername_DDMMYYY_HH:MM:SS.wav\"???). Ihre Änderungen am Dateinamen werden nicht dauerhaft gespeichert, sobald die Seite neu geladen wird, wird der Dateiname zurückgesetzt.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
+        "filename": "Im Feld \"Dateiname\" können Sie die Datei umbenennen. Standardmäßig wird Ihr Benutzername verwendet (\"JJJJ-MM-DD-MMSSSUTC+2--Benutzername.wav\"). Ihre Änderungen am Dateinamen werden nicht dauerhaft gespeichert, sobald die Seite neu geladen wird, wird der Dateiname zurückgesetzt.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
         "AUDIO-PLAYER": "Audios werden in diesem Audio Player abgespielt.",
         "MY-FILES": {
             "MY-FILES": "Unter \"Meine Dateien\" finden Sie Ihre erstellten Audio-Dateien, die noch nicht auf NextCloud hochgeladen wurden. Diese Audio-Dateien werden auf Ihrem Gerät gespeichert. Wenn Sie sich auf einem anderen Gerät anmelden, werden die Audio-Dateien nicht auf das andere Gerät übertragen.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
@@ -51,8 +51,7 @@
         },
         "NEXTCLOUD": {
             "NEXTCLOUD": "Im Bereich \"NextCloud\" finden Sie alle Ihre hochgeladenen Audio-Dateien. Die Audio-Dateien werden im gleichen Tabellenformat wie in \"Meine Dateien\" aufgelistet. Um ein versehentliches Löschen von Audio-Dateien auf NextCloud zu vermeiden, ist keine Löschfunktion vorgesehen. Wenn Sie eine oder mehrere Dateien löschen möchten, wenden Sie sich bitte an das Entwicklerteam.",
-            "REDIRECT-TO-NEXTCLOUD": "Wenn Sie Ihren Ordner auf NextCloud ansehen möchten, können Sie auf \"Zum NextCloud Ordner umleiten\" drücken. Dort finden Sie Ihre hochgeladenen Audio-Dateien und die zugehörigen Transkripte.",
-            "PLAYORDOWNLOAD": "Wenn sie Ihr Audio abspielen oder downloaden wollen, so müssen sie über den \"Zum NextCloud Ordner umleiten\" Link nach NextCloud. Dort können sie ihre hochgeladenen Audios abspielen oder downloaden."
+            "REDIRECT-TO-NEXTCLOUD": "Wenn Sie Ihren Ordner auf NextCloud ansehen möchten, können Sie auf \"Zum NextCloud Ordner umleiten\" drücken. Dort können Sie ihre hochgeladenen Audio-Dateien abspielen und downloaden. Die zugehörigen Transkripte können sie dort auch finden."
         }
     },
     "TABLE": {
