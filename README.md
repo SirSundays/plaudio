@@ -60,7 +60,26 @@ With Plaudio the gardeners can use their phones to record audio locally and then
 
 ### How do I get set up for development? ###
 
-    Coming soon.
+* ### Step 1: Preparations ###
+
+    If not Done yet,
+    follow all Steps in "How do I get set up for production?". After that stop Docker. (Strg + C in the Console where Docker is running)
+
+* ### Step 2: Update the Server URL ###
+
+    In the aformentioned "environment.ts", fill in the url of the server which can be reached by the frontend (something like "http://localhost" or "https://example.com").
+
+* ### Step 3: Start Docker ###
+
+    Execute "docker-compose up --build" inside the "docker" folder.
+
+* ### Step 4: Start ng serve ###
+
+    If not Done yet, execute "npm i" in the "client" folder.
+    Execute "ng serve" in the "client" folder. 
+    Now you can visit the Website in a Webbrowser. (Normally it can be visited at "localhost:4200")
+
+    Warning: Because of "docker-compose up --build" there is another Website running at "localhost".
 
 ### Contributers ###
 
