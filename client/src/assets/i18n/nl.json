@@ -22,7 +22,6 @@
         "RELOAD": "Pagina nieuw laden, a.u.b."
     },
     "NC-ERROR": {
-        "löschMichBitteIchBinNurEinKommentar": "Rechtschreibung und Grammatik überprüfen",
         "UNEXPECTED": "Er is een onverwachte fout opgetreden.",
         "UPLOADFAILED": "Niet alle Audio's zijn geüpload naar NextCloud!",
         "AUDIO": "Het audiobestand is niet goed op de server aangekomen",

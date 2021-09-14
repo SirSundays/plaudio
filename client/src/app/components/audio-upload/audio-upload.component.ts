@@ -11,13 +11,12 @@ import { TranslaterService } from '../../services/translater/translater.service'
 import * as RecordRTC from 'recordrtc';
 import { saveAs } from 'file-saver';
 
-
 @Component({
   selector: 'app-audio-upload',
   templateUrl: './audio-upload.component.html',
   styleUrls: ['./audio-upload.component.scss']
 })
-export class AudioUploadComponent implements OnInit {
+export class AudioUploadComponent implements OnInit  {
 
   constructor(
     private AudioUpload: AudioUploadService,
@@ -120,6 +119,8 @@ export class AudioUploadComponent implements OnInit {
 
   // NextCloud Share Link
   nextCloudShareLink: string = ""
+  
+  /**/
 
   // RecorderRTC Functions
   async recordingStart() {
@@ -348,21 +349,33 @@ export class AudioUploadComponent implements OnInit {
 
   /// Get All Data from the Source and show it in the Tables
   listAllAudiosFromIndexedDB() {
-    this.IndexedDB.getAll().then(async (data) => {
-      this.allAudios = data
-      for (let index in this.allAudios) {
-        this.allAudios[index].check = false
+    this.IndexedDB.getAll().then((data) => {
+      let tmp_allAudios = data
+      for (let index in tmp_allAudios) {
+        tmp_allAudios[index].check = false
+        tmp_allAudios[index].date = this.getDate(tmp_allAudios[index].filename)
+        tmp_allAudios[index].name = tmp_allAudios[index].filename.split('--')[1].replace("_", " ").replace('.wav', '')
       }
+
+      tmp_allAudios.sort((a,b) => a - b);
+
       this.allchecked = false;
+      this.allAudios = tmp_allAudios
     })
   }
   listallAudiosFromNextCloudfromuser() {
     this.observers.push(
       this.AudioUpload.listOfNextCloudFolder().pipe(take(1)).subscribe(data => {
-        this.allAudiosFromNextCloud = data;
-        for (let index in this.allAudiosFromNextCloud) {
-          this.allAudiosFromNextCloud[index].check = false;
+        let tmpAllAudiosFromNextCloud:any = data
+        for (let index in tmpAllAudiosFromNextCloud) {
+          tmpAllAudiosFromNextCloud[index].check = false;
+          tmpAllAudiosFromNextCloud[index].date = this.getDate(tmpAllAudiosFromNextCloud[index].filename)
+          tmpAllAudiosFromNextCloud[index].name = tmpAllAudiosFromNextCloud[index].filename.split('--')[1].replace("_", " ").replace('.wav', '')
         }
+
+        tmpAllAudiosFromNextCloud.sort((a,b) => a - b);
+
+        this.allAudiosFromNextCloud = tmpAllAudiosFromNextCloud
         this.allchecked = false;
       })
     )
@@ -376,8 +389,8 @@ export class AudioUploadComponent implements OnInit {
 
     let YearMonthDay = dateStr.substr(0, 10);
     let hour = dateStr.substr(11, 2);
-    let minute = dateStr.substr(12, 2);
-    let seconds = dateStr.substr(14, 2);
+    let minute = dateStr.substr(13, 2);
+    let seconds = dateStr.substr(15, 2);
     let zone = dateStr.substr(17);
 
     let date = `${YearMonthDay} ${hour}:${minute}:${seconds} ${zone}`
@@ -392,12 +405,6 @@ export class AudioUploadComponent implements OnInit {
       this.srcRef.nativeElement.src = bloburl
       this.audioPlayerRef.nativeElement.load()
       this.audioPlayerRef.nativeElement.play()
-      
-      /*
-      this.playAudio[id].audioplayer.addEventListener("ended", () => {
-        this.playAudio[id] = undefined
-      });
-      */
 
     }catch (e) {
       console.log("Audio-Error: ")
@@ -508,6 +515,8 @@ export class AudioUploadComponent implements OnInit {
     if (this.allAudios == null || this.allAudios == undefined || this.allAudios == []) {
       return false;
     }
+
+    
     if (this.allAudios.filter(t => t.check).length > 0) {
       if (this.allAudios.length == this.allAudios.filter(t => t.check).length) {
         this.allchecked = true;
