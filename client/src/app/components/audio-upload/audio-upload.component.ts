@@ -559,21 +559,6 @@ export class AudioUploadComponent implements OnInit  {
     return false;
   }
 
-  // Functions for the "NextCloud" Table
-  playAudioFromNextCloud(audioname) {
-    this.observers.push(
-      this.AudioUpload.getOneAudioFromNextCloud(audioname).pipe(take(1)).subscribe(blob => {
-        this.playAudio(blob)
-      })
-    )
-  }
-  downloadAudioFromNextCloud(audioname) {
-    this.observers.push(
-      this.AudioUpload.getOneAudioFromNextCloud(audioname).pipe(take(1)).subscribe(blob => {
-        saveAs(blob, audioname)
-      })
-    )
-  }
   redirectToNextCloudFolder(){
     this.observers.push(
       this.AudioUpload.getUrlfromNextCloudFolder().pipe(take(1)).subscribe(
