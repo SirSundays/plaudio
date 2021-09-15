@@ -16,6 +16,28 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
     readline.question("Choose action: create user(1), update password(2), delete user(3), list all users(4): ", number => {
         switch (number) {
             case "1":
+                const createUser = (tmp_username,tmp_password, tmp_company)=>{
+                    bcrypt.hash(tmp_password, 10, (err, hash) => {
+                        if (err) {
+                            console.log("Hash failed:", err);
+                            process.exit();
+                        }
+                        users.push({
+                            'username': tmp_username,
+                            'password': hash,
+                            'company': tmp_company
+                        });
+                        fs.writeFile('users.json', JSON.stringify(users), (err) => {
+                            if (err) {
+                                console.log("Saving failed:", err);
+                                process.exit();
+                            }
+                            console.log("Done!");
+                            process.exit();
+                        });
+                    });
+                }
+
                 readline.question("New Username: ", username => {
                     if (users.filter(user => user.username === username).length !== 0) {
                         console.log("User already exists. Abort.");
@@ -23,28 +45,22 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
                     }
                     readline.question("Password: ", password => {
                         readline.question(`Do you want to create a user ${username} with the password ${password}? (y/n) `, accept => {
-                            readline.close();
                             if (accept !== "y") {
                                 process.exit();
                             }
-                            bcrypt.hash(password, 10, (err, hash) => {
-                                if (err) {
-                                    console.log("Hash failed:", err);
-                                    process.exit();
+                            
+                            readline.question(`Do you want to add an Company to the user ${username}? (y/n) `, acceptAddCompany=>{
+                                if (acceptAddCompany === "y") {
+                                    readline.question("New Username: ", company => {
+                                        readline.close();
+                                        createUser(username, password, company)
+                                    })
+                                }else{
+                                    readline.close();
+                                    createUser(username, password, "")
                                 }
-                                users.push({
-                                    'username': username,
-                                    'password': hash
-                                });
-                                fs.writeFile('users.json', JSON.stringify(users), (err) => {
-                                    if (err) {
-                                        console.log("Saving failed:", err);
-                                        process.exit();
-                                    }
-                                    console.log("Done!");
-                                    process.exit();
-                                });
-                            });
+                            })
+
                         });
                     });
                 });
