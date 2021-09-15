@@ -6,6 +6,8 @@ const jwt_decode = require('jwt-decode');
 
 //import Clienten
 const nextcloudClient = require("nextcloud-node-client")
+const users = JSON.parse(fs.readFileSync('./users.json'));
+
 const dialogflow = require('@google-cloud/dialogflow');
 
 const UploadController = {
@@ -39,17 +41,22 @@ const UploadController = {
             // Client Credentials is in docker/docker-compose.yml
             const client = new nextcloudClient.Client();
             
-            /// create folder and collect all necessery Information 
-            // take User Givenname und Birthname
-            var name = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
-            if(name == undefined || name == ""){
-                name = "no_Name"
-            }else{
-                name = name.split(" ").join("_")
-            }
+            /// create folder and collect all necessery Information   
+            // take User Name
+            const originalName = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
+            const name = originalName.split(" ").join("_")
             
+            // take Company Name
+            let userWname = users.filter(user => user.username === originalName);
+            let companyName = userWname[0].company
+
             // Complete Path to the Folder in which all selected Audios are saved
-            var nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
+            var nextcloud_folder_path
+            if(companyName != "" && companyName != undefined){
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
+            }else{
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
+            }
 
             // create Folder
             var nextcloud_folder = await client.createFolder(nextcloud_folder_path);
@@ -117,17 +124,25 @@ const UploadController = {
     async listOfNextCloudFiles(req, res){
         try{
             /// Get Username
-            var name = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
-            if(name == undefined || name == ""){
-                name = "no_Name"
+            const originalName = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
+            const name = originalName.split(" ").join("_")
+            
+            // take Company Name
+            let userWname = users.filter(user => user.username === originalName);
+            let companyName = userWname[0].company
+
+            // Complete Path to the Folder in which all selected Audios are saved
+            var nextcloud_folder_path
+            if(companyName != "" && companyName != undefined){
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
             }else{
-                name = name.split(" ").join("_")
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
             }
 
             /// Client Credentials can be found in docker-compose.yml  
             const client = new nextcloudClient.Client();
             /// Get one Audio from the Folder
-            const folder = await client.getFolder("/Audio_Dateien_von_den_Gaertnern/" + name);
+            const folder = await client.getFolder(nextcloud_folder_path);
             
             /// check if the Folder is empty
             if(folder == null || folder == undefined){
@@ -143,11 +158,9 @@ const UploadController = {
             for(let file of files){
                 let splitName = file.memento.baseName.split(".")
                 let mimeTyp = splitName[splitName.length -1]
-
                 if(mimeTyp == "wav"){
                     filename.push({filename: decodeURIComponent(file.memento.baseName)})
                 }
-
             }
             
             res.status(200).send(filename)
@@ -160,11 +173,19 @@ const UploadController = {
     async getOneAudioFromNextCloud(req, res){
         try{
             /// Get Username
-            var username = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
-            if(username == undefined || username == ""){
-                username = "no_Name"
+            const originalName = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
+            const name = originalName.split(" ").join("_")
+            
+            // take Company Name
+            let userWname = users.filter(user => user.username === originalName);
+            let companyName = userWname[0].company
+
+            // Complete Path to the Folder in which all selected Audios are saved
+            var nextcloud_folder_path
+            if(companyName != "" && companyName != undefined){
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
             }else{
-                username = username.split(" ").join("_")
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
             }
 
             /// Get Audioname
@@ -174,7 +195,7 @@ const UploadController = {
             /// Client Credentials can be found in docker-compose.yml  
             const client = new nextcloudClient.Client();
             /// Get one Audio from the Folder
-            const file = await client.getFile("/Audio_Dateien_von_den_Gaertnern/" + username + "/" + audioname);
+            const file = await client.getFile(nextcloud_folder_path + "/" + audioname);
             const buffer = await file.getContent();
 
             res.status(200).send(buffer)
@@ -186,15 +207,20 @@ const UploadController = {
     async getNextCloudUrl(req, res){
         try{
             /// Get Username
-            var username = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
-            if(username == undefined || username == ""){
-                username = "no_Name"
-            }else{
-                username = username.split(" ").join("_")
-            }
+            const originalName = jwt_decode(req.headers.authorization.replace("Bearer ","")).sub;
+            const name = originalName.split(" ").join("_")
+            
+            // take Company Name
+            let userWname = users.filter(user => user.username === originalName);
+            let companyName = userWname[0].company
 
-            /// create Folder Path
-            const nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + username
+            // Complete Path to the Folder in which all selected Audios are saved
+            var nextcloud_folder_path
+            if(companyName != "" && companyName != undefined){
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
+            }else{
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
+            }
 
             /// Create the Client for NextCloud
             const client = new nextcloudClient.Client();
