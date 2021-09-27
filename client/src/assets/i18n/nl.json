@@ -38,19 +38,19 @@
         "REC-PAUSE": "Heb jij een opname gestart kun jij met het \"Pauze\"-symbool een opname pauzeeren en later dan voortzetten. Om een opname voort te zetten druk op het blauwe knopje met het microfoon symbool.",
         "REC-STOP": "Om een lopende opname te stoppen druk op het rode knopje met het \"Stop\"-symbool. De opname wordt dan onherroepelijk verwijderd.",
         "REC-SEND": "Wil jij een lopende opname opslaan dan druk op het knopje met het \"pijl\"-symbool.",
-        "filename": "U kunt het bestand hernoemen in het veld \"Bestandsnaam\". Uw gebruikersnaam wordt standaard gebruikt (\"JJJJ-MM-DD-MMSSSUTC+2-gebruikersnaam.wav\"). Uw wijzigingen in de bestandsnaam worden niet permanent opgeslagen, zodra de pagina opnieuw wordt geladen, wordt de bestandsnaam opnieuw ingesteld.", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt",
-        "AUDIO-PLAYER":"Audio wordt afgespeeld in deze audiospeler.", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt", 
+        "filename": "In het veld \"Bestandsnaam\" kunt u de naam van het bestand wijzigen. Standaard wordt uw gebruikersnaam gebruikt (JJJJ-MM-DD-MMSSSUTC+2--Username.wav). Uw wijzigingen in de bestandsnaam worden niet permanent opgeslagen; zodra de pagina opnieuw wordt geladen, wordt de bestandsnaam opnieuw ingesteld.",
+        "AUDIO-PLAYER":"Audio wordt afgespeeld in deze audiospeler.",
         "MY-FILES": {
-            "MY-FILES": "Onder \"Mijn bestanden\" vind je de door jou gemaakte audiobestanden die nog niet zijn geüpload naar NextCloud. Deze audiobestanden worden op uw apparaat opgeslagen. Als je op een ander apparaat inlogt, worden de audiobestanden niet overgezet naar het andere apparaat.", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt",
-            "FIRST-COLUMN": "In de eerste kolom kunnen audiobestanden worden geselecteerd om te verwijderen of om naar NextCloud te sturen.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
-            "SECOND-COLUMN": "De tweede kolom toont de opnamedatum.", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt", 
-            "THIRD-COLUMN": "De bestandsnaam wordt weergegeven in de derde kolom.", "löschMichBitteIchBinNurEinKommentar3":"Es wurde mit Google übersetzt", 
-            "FOURTH-COLUMN": "In de vierde kolom kunnen ofwel de GPS-gegevens van Google Maps worden weergegeven of het is een leeg veld, omdat er geen GPS-gegevens zijn opgenomen voor het bijbehorende audiobestand.", "löschMichBitteIchBinNurEinKommentar6":"Es wurde mit Google übersetzt", 
-            "FIFTH-COLUMN1": "In de vijfde kolom kun je het audiobestand afspelen", "löschMichBitteIchBinNurEinKommentar4":"Es wurde mit Google übersetzt", 
-            "FIFTH-COLUMN2": "of gedownload.", "löschMichBitteIchBinNurEinKommentar5":"Es wurde mit Google übersetzt"
+            "MY-FILES": "Onder \"Mijn bestanden\" vind U de door U gemaakte audiobestanden die nog niet zijn geupload naar NextCloud. Deze audiobestanden worden op uw apparaat opgeslagen. Als U op een ander apparaat inlogt, worden de audiobestanden niet overgezet naar het andere apparaat.",
+            "FIRST-COLUMN": "In de eerste kolom kunnen audiobestanden worden geselecteerd om te worden verwijderd of naar NextCloud te worden verzonden.",
+            "SECOND-COLUMN": "In de tweede kolom staat de datum van opname.",
+            "THIRD-COLUMN": "De bestandsnaam wordt weergegeven in de derde kolom.",
+            "FOURTH-COLUMN": "In de vierde kolom kunnen ofwel de GPS-gegevens van Google Maps worden weergegeven of het is een leeg veld omdat er geen GPS-gegevens werden opgenomen voor het overeenkomstige audiobestand.",
+            "FIFTH-COLUMN1": "In de vijfde kolom kunt U het audiobestand afspelen", 
+            "FIFTH-COLUMN2": "of gedownload."
         },
         "NEXTCLOUD": {
-            "NEXTCLOUD": "U vindt al uw geüploade audiobestanden in het gebied \"NextCloud\". De audiobestanden worden weergegeven in hetzelfde tabelformaat als in \"Mijn bestanden\". Om te voorkomen dat audiobestanden op NextCloud per ongeluk worden verwijderd, is er geen verwijderfunctie. Als je één of meerdere bestanden wilt verwijderen, neem dan contact op met het ontwikkelteam.", "löschMichBitteIchBinNurEinKommentar1":"Es wurde mit Google übersetzt", 
+            "NEXTCLOUD": "U vindt al uw geuploade audiobestanden in de sectie \"NextCloud\". De audiobestanden worden weergegeven in hetzelfde tabelformaat als in \"Mijn bestanden\". Om te voorkomen dat audiobestanden op NextCloud per ongeluk worden verwijderd, is er geen verwijderfunctie. Als je één of meerdere bestanden wilt verwijderen, neem dan contact op met het ontwikkelteam.",
             "REDIRECT-TO-NEXTCLOUD": "Als u uw map op NextCloud wilt zien, kunt u op \"Omleiden naar de map NextCloud\" drukken. Daar kunt u uw geüploade audiobestanden afspelen en downloaden. Daar vindt u ook de bijbehorende transcripties.", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt"
         }
     },
@@ -65,8 +65,8 @@
     "USERNAME": "Gebruikersnaam",
     "PASSWORD": "Wachtwoord",
     "AUTH": {
-        "UNAUTHORIZED": "Verkeerde gebruikersnaam of verkeerd wachtwoord", "löschMichBitteIchBinNurEinKommentar":"Es wurde mit Google übersetzt",
-        "VERIFY-UNAUTHORIZED": "U bent uitgelogd omdat uw login token ongeldig is!", "löschMichBitteIchBinNurEinKommentar2":"Es wurde mit Google übersetzt"
+        "UNAUTHORIZED": "Verkeerde gebruikersnaam of verkeerd wachtwoord", 
+        "VERIFY-UNAUTHORIZED": "U bent uitgelogd omdat uw login token ongeldig is!"
     },
-    "REDIRECT-TO-NC-FOLDER": "Omleiden naar de map NextCloud", "löschMichBitteIchBinNurEinKommentar3":"Es wurde mit Google übersetzt"
+    "REDIRECT-TO-NC-FOLDER": "Omleiden naar de map NextCloud"
 }
