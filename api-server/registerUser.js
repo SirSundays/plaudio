@@ -51,7 +51,7 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
                             
                             readline.question(`Do you want to add an Company to the user ${username}? (y/n) `, acceptAddCompany=>{
                                 if (acceptAddCompany === "y") {
-                                    readline.question("New Username: ", company => {
+                                    readline.question("Company Name: ", company => {
                                         readline.close();
                                         createUser(username, password, company)
                                     })
@@ -72,30 +72,36 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
                         process.exit();
                     }
                     readline.question("New password: ", password => {
-                        readline.question(`Do you want to update the user ${username} with the password ${password}? (y/n) `, accept => {
-                            readline.close();
-                            if (accept !== "y") {
-                                process.exit();
-                            }
-                            bcrypt.hash(password, 10, (err, hash) => {
-                                if (err) {
-                                    console.log("Hash failed:", err);
+                        readline.question('new Company Name: ', companyName => {
+                            readline.question(`Do you want to update the user ${username} with the password ${password} and the Company Name ${companyName}? (y/n) `, accept => {
+                                readline.close();
+                                if (accept !== "y") {
                                     process.exit();
                                 }
-                                users[users.findIndex(user => user.username === username)] = {
-                                    'username': username,
-                                    'password': hash
-                                };
-                                fs.writeFile('users.json', JSON.stringify(users), (err) => {
+                                
+                                bcrypt.hash(password, 10, (err, hash) => {
                                     if (err) {
-                                        console.log("Saving failed:", err);
+                                        console.log("Hash failed:", err);
                                         process.exit();
                                     }
-                                    console.log("Done!");
-                                    process.exit();
+                                    users[users.findIndex(user => user.username === username)] = {
+                                        'username': username,
+                                        'password': hash,
+                                        'company': companyName
+                                    };
+                                    fs.writeFile('users.json', JSON.stringify(users), (err) => {
+                                        if (err) {
+                                            console.log("Saving failed:", err);
+                                            process.exit();
+                                        }
+                                        console.log("Done!");
+                                        process.exit();
+                                    });
                                 });
                             });
-                        });
+
+                        })
+
                     });
                 });
                 break;
