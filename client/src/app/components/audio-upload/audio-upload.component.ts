@@ -77,7 +77,7 @@ export class AudioUploadComponent implements OnInit  {
   public userProfile = null;
 
   // check if the Username Input is valid
-  username = new FormControl('', Validators.pattern('[a-zA-Z1-90 _äüöß]*'));
+  username = new FormControl('', Validators.pattern('[a-zA-Z1-90 _]*'));
 
   // for Recording
   public_recorder: any;
