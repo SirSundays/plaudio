@@ -326,18 +326,6 @@ const UploadController = {
                     }else{
                         // Der Schlüssel für Dialogflow
                         const  config = {
-                            credentials: {
-                                "type": "service_account",
-                                "project_id": "gaertnergruenerdaumen-ahbi",
-                                "private_key_id": "4279ec91c60a996ffc4b4617cfb2880acf709d41",
-                                "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDbFQwIf4zLLw7h\nVDifII5Tzk00SWxkCn4LLyFfGIpPMSHuEH/5W30NB3cpTqCqEDS5yINmlYVRK3nU\nPiWi4dkbf5X1PeAtyAzTHjTmSERO5jmiVjexaHS3yjYElluGQOucvwEeqlqA8Vth\n94RBIR+Lxf7MBIIy7XVKxIiVEY2ShHQqs9PTXJcKBz/STEQBmXK+AvC65Nnwlmmp\npQnIGTD3/kKxPQQwBtUUbvf6TF57KFyVf+A3oc9wFXI+18KAfvt8jtfmwR3R36o2\nxvqGFmxkNv6s/rLSFphRVncrwFZWJl02C9j88v2afcGKMGBlCgNRGvKxj0JEoAa8\nM/VRAiHzAgMBAAECggEAVwUnp/J+CrDQ8MjCytYkIn615NhrQNt4EFoyn7LAMU97\nQjP0mSfxZmz6NIKiR5qzTr4qD2PBtimWNStQSL/7vDPz7RscQiMNkQgVDAlVdJ92\n8hfb/FBY2C3uQek1RoDf9X1a5QLWexQjb6jgs/wDq0HEgOYjjzYJ2l5xQADeYn0V\nAaksqvm+wcd9UU6XmJ4TnPl+RMQOumXEoCN4Kkp9heGtEO2fiig0vFeDIOzuQvoy\nJxQi9jowAdOhlYIzCtNJp5tjvBsdY0FSs8KzSLvMX5CeWHi3J+yuL+5pYA5gYzGr\nVLbs/aMvftdixmTbvqoXFBXeJ1vt47RzpKh74aGMgQKBgQDuNvDimNi9zt2JwLpo\nWwHW9pN5HJ+oMaDvco68QdyE5nGqEFXr/orDNKBNfd7tr5U4NRg9xfPx1+BFPYXV\nefVhTAsnVgZvoQeOvfjWMU4S4u2qTUeypmYz05WH3dp7rnKwJnjiyGJ9EBCscKlh\ntXk62wOOIKvYnwmypT67CVp7cwKBgQDrcGxnFeXpznUu4RzIR7g4tBhoQnCbjY5/\nePX5hcw/ux020O+qVQ6+XwpNE32cdcvJOaj1RPTckRYcPcc0HzaZ/Stetck+uJHA\n6tqXdNOg4h6Ocvg9YKmrdDkqSROdBzOcASZOXmC+6MHd/uecKAWYv654D2Pnh1f0\n0IJUNO0fgQKBgCuKmU8h1wQiqrXCJ5BpihWLrnsFs10f7SW3T8WzWCZmpMIMCFiB\nh0WU+fQQHM5fOKw0cEDiTOuYpOKjEzJo/2QQbT18aOLAkUwTB0fHbVjgZ8aoJ4HN\nDoNMmlliQMw4n7f44EG7lNz9Mb8DPMKiVA1g+O5ipGaM803XDHdNh19nAoGBAIJ3\nqUqywtZ+t0dELev6embJviDAeKBqoEWZZU1hzJ6gdP70Z2tPeT0bc5zkqR3z1Prs\nfel0zfAQYl1CCsqiZWKN/eOc/ylHpFVwj7OQZNnplB9CLLfugfdmD2uUVU8WN45C\nwNR6zkfcudnoMLbDIt7Tkb4sYSNjR+V9SkuZjLGBAoGAbarnOgpvvYORqW+fkKFk\nsQ70GzqZDlIZqyJtFtUTzMqkS3El299FPaqas0Q8+HO8J+miTJsFwZ6Uwk3NkwTC\ncVFyTeLXo+x+2/VVP3ANK1cDDLF0sllDVQJSxIPn3n96eurJ68knBoEEbc0aAR7o\nSg9RTfNR3Z7nm8IYtU70XVE=\n-----END PRIVATE KEY-----\n",
-                                "client_email": "dialogflow-admin@gaertnergruenerdaumen-ahbi.iam.gserviceaccount.com",
-                                "client_id": "104174591767697263007",
-                                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                                "token_uri": "https://oauth2.googleapis.com/token",
-                                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-                                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-admin%40gaertnergruenerdaumen-ahbi.iam.gserviceaccount.com"
-                            }
                         }
                         // Instantiates a session client
                         const sessionClient = new dialogflow.SessionsClient(config);
