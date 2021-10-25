@@ -53,7 +53,7 @@ const UploadController = {
             // Complete Path to the Folder in which all selected Audios are saved
             var nextcloud_folder_path
             if(companyName != "" && companyName != undefined){
-                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + "Unternehmen_" + companyName + "/" + name
             }else{
                 nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
             }
@@ -134,7 +134,7 @@ const UploadController = {
             // Complete Path to the Folder in which all selected Audios are saved
             var nextcloud_folder_path
             if(companyName != "" && companyName != undefined){
-                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + "Unternehmen_" + companyName + "/" + name
             }else{
                 nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
             }
@@ -183,7 +183,7 @@ const UploadController = {
             // Complete Path to the Folder in which all selected Audios are saved
             var nextcloud_folder_path
             if(companyName != "" && companyName != undefined){
-                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + "Unternehmen_" + companyName + "/" + name
             }else{
                 nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
             }
@@ -214,45 +214,60 @@ const UploadController = {
             let userWname = users.filter(user => user.username === originalName);
             let companyName = userWname[0].company
 
-            // Complete Path to the Folder in which all selected Audios are saved
+            // Complete Path to the User Folder
             var nextcloud_folder_path
+            var nextcloud_subfolder_path
             if(companyName != "" && companyName != undefined){
-                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + companyName + "/" + name
+                nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + "Unternehmen_" + companyName + "/" + name
+                nextcloud_subfolder_path = "Audio_Dateien_von_den_Gaertnern/" + "Unternehmen_" + companyName + "/" 
             }else{
                 nextcloud_folder_path = "Audio_Dateien_von_den_Gaertnern/" + name
+                nextcloud_subfolder_path = undefined
             }
 
             /// Create the Client for NextCloud
             const client = new nextcloudClient.Client();
             
-            /// use Username to find the Folder 
-            var folder = await client.getFolder(nextcloud_folder_path);
+            /// use Username to check if the Folder exist 
+            var userFolder = await client.getFolder(nextcloud_folder_path);
             
-            // check if folder exist
-            if(folder == null || folder == undefined){
+            if(userFolder == null || userFolder == undefined){
                 // create folder
                 let nextcloud_folder = await client.createFolder(nextcloud_folder_path);
                 let upload = new nextcloudClient.UploadFilesCommand(client, { nextcloud_folder });
                 await upload.execute();
 
-                /// use Username to find the Folder 
-                folder = await client.getFolder(nextcloud_folder_path);
+                userFolder = await client.getFolder(nextcloud_folder_path);
             }
 
             /// either it finds a comment in the Folder or it throws an error when its empty
             var comment
             try{
-                comment = await folder.getComments()
+                comment = await userFolder.getComments()
             }catch(e){
                 comment = []
             }
             
+
+
             /// if the Folder dont has a Comment than create a share Link and add it as a Comment to the Folder
             var shareURL
             if(comment.length == 0){
-                const share = await client.createShare({fileSystemElement: folder})
-                shareURL = share.url
+                // get folder from which a Url should created
+                let folder 
+                if(nextcloud_subfolder_path){
+                    folder = await client.getFolder(nextcloud_subfolder_path);
+                }else{
+                    folder = userFolder
+                }
 
+                let share = await client.createShare({fileSystemElement: folder})
+                if(nextcloud_subfolder_path){
+                    shareURL = share.url + "?path=%2F" + name
+                }else{
+                    shareURL = share.url
+                }
+                
                 /// check the URL
                 if(typeof shareURL == "string"){
                     // The Url needs to have an https
@@ -262,10 +277,11 @@ const UploadController = {
                     }
                 }
 
-                await folder.addComment(shareURL)
+                await userFolder.addComment(shareURL)
             }else{
                 shareURL = comment[0]
             }
+            console.log(shareURL)
 
             /// check the URL
             if(typeof shareURL == "string"){
