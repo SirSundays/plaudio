@@ -38,7 +38,7 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
                     });
                 }
 
-                readline.question("New Username: ", username => {
+                readline.question("New Username (dont use ä,ö,ü,ß): ", username => {
                     if (users.filter(user => user.username === username).length !== 0) {
                         console.log("User already exists. Abort.");
                         process.exit();
