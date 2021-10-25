@@ -13,7 +13,7 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
     }
     let users = JSON.parse(json);
 
-    readline.question("Choose action: create user(1), update password(2), delete user(3), list all users(4): ", number => {
+    readline.question("Choose action: create user(1), update password(2), update Company(3), delete user(4), list all users(5): ", number => {
         switch (number) {
             case "1":
                 const createUser = (tmp_username,tmp_password, tmp_company)=>{
@@ -72,40 +72,64 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
                         process.exit();
                     }
                     readline.question("New password: ", password => {
-                        readline.question('new Company Name: ', companyName => {
-                            readline.question(`Do you want to update the user ${username} with the password ${password} and the Company Name ${companyName}? (y/n) `, accept => {
-                                readline.close();
-                                if (accept !== "y") {
+                        
+                        readline.question(`Do you want to update the user ${username} with the password ${password}? (y/n) `, accept => {
+                            readline.close();
+                            if (accept !== "y") {
+                                process.exit();
+                            }
+                            
+                            bcrypt.hash(password, 10, (err, hash) => {
+                                if (err) {
+                                    console.log("Hash failed:", err);
                                     process.exit();
                                 }
-                                
-                                bcrypt.hash(password, 10, (err, hash) => {
+                                users[users.findIndex(user => user.username === username)].password = hash
+
+                                fs.writeFile('users.json', JSON.stringify(users), (err) => {
                                     if (err) {
-                                        console.log("Hash failed:", err);
+                                        console.log("Saving failed:", err);
                                         process.exit();
                                     }
-                                    users[users.findIndex(user => user.username === username)] = {
-                                        'username': username,
-                                        'password': hash,
-                                        'company': companyName
-                                    };
-                                    fs.writeFile('users.json', JSON.stringify(users), (err) => {
-                                        if (err) {
-                                            console.log("Saving failed:", err);
-                                            process.exit();
-                                        }
-                                        console.log("Done!");
-                                        process.exit();
-                                    });
+                                    console.log("Done!");
+                                    process.exit();
                                 });
                             });
-
-                        })
+                        });
 
                     });
                 });
                 break;
             case "3":
+                readline.question("Which User should be updated: ", username => {
+                    if (users.filter(user => user.username === username).length == '0') {
+                        console.log("No user with this username. Abort.");
+                        process.exit();
+                    }
+                    readline.question("New Company: ", companyName => {
+                        
+                        readline.question(`Do you want to update the user ${username} with the Company ${companyName}? (y/n) `, accept => {
+                            readline.close();
+                            if (accept !== "y") {
+                                process.exit();
+                            }
+                            
+                            users[users.findIndex(user => user.username === username)].company = companyName
+
+                            fs.writeFile('users.json', JSON.stringify(users), (err) => {
+                                if (err) {
+                                    console.log("Saving failed:", err);
+                                    process.exit();
+                                }
+                                console.log("Done!");
+                                process.exit();
+                            });
+                        });
+
+                    });
+                });
+                break
+            case "4":
                 readline.question("Which User should be deleted: ", username => {
                     if (users.filter(user => user.username === username).length == '0') {
                         console.log("No user with this username. Abort.");
@@ -128,7 +152,7 @@ fs.readFile('./users.json', 'utf8', (err, json) => {
                     });
                 });
                 break;
-            case "4":
+            case "5":
                 users.forEach((user, i) => {
                     console.log(`${i + 1}. ${user.username}`);
                 });
