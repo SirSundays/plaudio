@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  api:
+  plaudio_api:
     build: 
       context: ../api-server/
     volumes: 
@@ -16,7 +16,7 @@ services:
       NEXTCLOUD_URL: https://cloud.example.com
     networks:
       - plaudio-network
-  nginx:
+  plaudio_nginx:
     image: nginx
     volumes:
       - ./nginx/:/etc/nginx/
@@ -26,7 +26,7 @@ services:
     ports:
       - "80:80"
     depends_on: 
-      - api
+      - plaudio_api
 
 networks:
   plaudio-network:
