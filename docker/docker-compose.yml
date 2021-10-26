@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  plaudio_api:
+  api:
     build: 
       context: ../api-server/
     volumes: 
       - ./private.key:/src/private.key
       - ./public.key:/src/public.key
       - /src/node_modules
-    environment: 
+    environment:
       NODE_ENV: production
       M_PROD: 'true'
       NEXTCLOUD_USERNAME: max
@@ -16,7 +16,7 @@ services:
       NEXTCLOUD_URL: https://cloud.example.com
     networks:
       - plaudio-network
-  plaudio_nginx:
+  nginx:
     image: nginx
     volumes:
       - ./nginx/:/etc/nginx/
@@ -25,8 +25,8 @@ services:
       - plaudio-network
     ports:
       - "80:80"
-    depends_on: 
-      - plaudio_api
+    depends_on:
+      - api
 
 networks:
   plaudio-network:
