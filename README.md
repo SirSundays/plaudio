@@ -81,6 +81,20 @@ With Plaudio the gardeners can use their phones to record audio locally and then
 
     Warning: Because of "docker-compose up --build" there is another Website running at "localhost".
 
+### How to Test Service Worker? ###
+
+* ### Step 1: build production dist
+    in client execute "ng build --prod
+* ### Step 2: start http-server
+    in \client\dist\"EXAMPLE" execute "http-server -p 4200 -c-1"
+* ### Step 3: visit Page
+    visit localhost:4200.
+    Your Website should be shown.
+* ### Step 4: check if Service Worker is working
+    Press f12 and go to "Network". There should be a column, filled with "service-worker".
+    If not Reload the site. If the reloading didn't showed "service-worker" in any Columns, 
+    then check if you build and started the App properly (look in Step 1 and 2).
+
 ### Contributers ###
 
 [Dmitrij Poberej](https://github.com/Dmitrij-P)
